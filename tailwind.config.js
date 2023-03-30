@@ -1,0 +1,15 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  purge: ["./*.html", "./src/**/*.{vue,js,ts,jsx,tsx,css}"],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    colors: {
+      dark: "#121212",
+      "dark-200": "#282828",
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
