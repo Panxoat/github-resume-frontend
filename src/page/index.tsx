@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+
 import { ReactComponent as GithubLogo } from "../assets/github-mark.svg";
 
 export const MainPage = () => {
@@ -15,16 +17,23 @@ export const MainPage = () => {
   return (
     <div className="w-full h-full flex flex-col gap-y-[50px] justify-center items-center">
       <GithubLogo />
-      <input
+      <motion.input
+        whileHover={{ scale: 1.2 }}
         ref={inputRef}
         type="text"
         name="github_id"
+        placeholder="Enter your Github ID"
         value={id}
         onChange={(e) => {
           setId(e.target.value);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            alert(id);
+          }
+        }}
         autoComplete="off"
-        className="w-[200px] h-[30px] text-center outline-none rounded"
+        className="w-[200px] h-[40px] text-center outline-none rounded-[30px]"
       />
     </div>
   );
