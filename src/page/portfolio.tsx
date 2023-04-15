@@ -4,6 +4,7 @@ import { ReactComponent as CommitIcon } from "../assets/portfolio/commit_icon.sv
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/language_icon.svg";
 
 import { SummaryBox } from "../components/portfolio/summaryBox";
+import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData } from "../types/portfolio";
 
@@ -170,6 +171,8 @@ Portfolio.LanguageSummary = ({ data }: IUserData) => {
               </div>
             ))}
           </aside>
+
+          <PieChart data={data.languages} />
         </div>
       </div>
     </section>
