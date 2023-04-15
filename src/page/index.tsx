@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+
+import baseURL from "../api/axios";
 
 import { ReactComponent as GithubLogo } from "../assets/github-mark.svg";
 
 export const MainPage = () => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [id, setId] = useState("");
 
   useEffect(() => {
@@ -13,6 +18,28 @@ export const MainPage = () => {
       inputRef.current.focus();
     }
   }, [inputRef.current]);
+
+  const { mutate } = useMutation<any, any, string>(
+    ["get_user_info"],
+    async (userId) => {
+      const response = await baseURL.get(`/github/user/${userId}`);
+
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        navigate("portfolio", {
+          state: {
+            data,
+          },
+        });
+      },
+    }
+  );
+
+  const onSubmit = () => {
+    mutate(id);
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-y-[50px] justify-center items-center">
@@ -29,7 +56,7 @@ export const MainPage = () => {
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            alert(id);
+            onSubmit();
           }
         }}
         autoComplete="off"

@@ -5,7 +5,7 @@ export default {
   theme: {
     colors: {
       dark: "#121212",
-      "dark-200": "#282828",
+      "dark-200": "#0F1015",
     },
   },
   variants: {
