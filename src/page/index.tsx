@@ -45,6 +45,7 @@ export const MainPage = () => {
     <div className="w-full h-screen flex flex-col gap-y-[50px] justify-center items-center">
       <GithubLogo />
       <form
+        className="flex items-center gap-x-[10px]"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
@@ -68,6 +69,12 @@ export const MainPage = () => {
           autoComplete="off"
           className="w-[200px] h-[40px] text-center outline-none rounded-[30px]"
         />
+        <button
+          type="submit"
+          className="px-[10px] h-[40px] bg-[#ffffff] rounded-[20px]"
+        >
+          Go
+        </button>
       </form>
     </div>
   );
