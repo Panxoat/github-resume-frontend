@@ -44,24 +44,31 @@ export const MainPage = () => {
   return (
     <div className="w-full h-screen flex flex-col gap-y-[50px] justify-center items-center">
       <GithubLogo />
-      <motion.input
-        whileHover={{ scale: 1.2 }}
-        ref={inputRef}
-        type="text"
-        name="github_id"
-        placeholder="Enter your Github ID"
-        value={id}
-        onChange={(e) => {
-          setId(e.target.value);
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            onSubmit();
-          }
-        }}
-        autoComplete="off"
-        className="w-[200px] h-[40px] text-center outline-none rounded-[30px]"
-      />
+      >
+        <motion.input
+          whileHover={{ scale: 1.2 }}
+          ref={inputRef}
+          type="text"
+          name="github_id"
+          placeholder="Enter your Github ID"
+          value={id}
+          onChange={(e) => {
+            setId(e.target.value);
+          }}
+          // onKeyDown={(e) => {
+          //   if (e.key === "Enter") {
+          //     onSubmit();
+          //   }
+          // }}
+          autoComplete="off"
+          className="w-[200px] h-[40px] text-center outline-none rounded-[30px]"
+        />
+      </form>
     </div>
   );
 };
