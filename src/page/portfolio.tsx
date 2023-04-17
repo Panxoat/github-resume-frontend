@@ -26,12 +26,12 @@ export const Portfolio = () => {
       {!data && <div>loading...</div>}
 
       {data && (
-        <article className="flex gap-x-[40px] px-[40px] py-[50px]">
-          <aside>
+        <article className="flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
+          <aside className="w-[20%] hidden tablet:block">
             <Portfolio.Aside data={data} />
           </aside>
 
-          <div className="w-full flex flex-col gap-y-[32px]">
+          <div className="w-full tablet:w-[80%] flex flex-col gap-y-[32px]">
             <Portfolio.Chart data={data} />
             <Portfolio.Summary data={data} />
             <Portfolio.LanguageSummary data={data} />
@@ -97,8 +97,8 @@ Portfolio.Aside = ({ data }: IUserData) => {
 Portfolio.Chart = ({ data }: IUserData) => {
   return (
     <section className="w-full">
-      <div className="flex items-center justify-between p-[40px] rounded-[12px] bg-[#1A1B24]">
-        <div className="w-[40%] flex flex-col">
+      <div className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between p-[40px] rounded-[12px] bg-[#1A1B24]">
+        <div className="w-full tablet:w-[40%] flex flex-col">
           <h1 className="text-[#ffffff] text-[28px] font-bold">
             {data.user.name}님의
             <br /> 최근 5개월 커밋 횟수
@@ -109,7 +109,9 @@ Portfolio.Chart = ({ data }: IUserData) => {
             <span className="text-[#ffffff] text-[28px]">회</span>
           </p>
         </div>
-        <div className="w-[60%] border border-[#e1e1e1]">차트 공간</div>
+        <div className="w-full tablet:w-[60%] border border-[#e1e1e1]">
+          차트 공간
+        </div>
       </div>
     </section>
   );
@@ -159,8 +161,8 @@ Portfolio.LanguageSummary = ({ data }: IUserData) => {
       <div className="flex flex-col gap-y-[20px] p-[33px] rounded-[12px] bg-[#1A1B24]">
         <h1 className="text-[#ffffff] text-[24px] font-bold">언어 별 점유율</h1>
 
-        <div className="flex justify-between">
-          <aside className="max-h-[260px] overflow-auto">
+        <div className="flex flex-col tablet:flex-row justify-between">
+          <aside className="w-full talbet:w-[40%] overflow-auto">
             {data.languages.map((language, languageIdx) => (
               <div key={languageIdx} className="flex items-center gap-x-[5px]">
                 <div className="w-[6px] h-[6px] bg-[#efefef]" />
@@ -172,7 +174,9 @@ Portfolio.LanguageSummary = ({ data }: IUserData) => {
             ))}
           </aside>
 
-          <PieChart data={data.languages} />
+          <div className="w-full tablet:w-[60%]">
+            {/* <PieChart data={data.languages} /> */}
+          </div>
         </div>
       </div>
     </section>

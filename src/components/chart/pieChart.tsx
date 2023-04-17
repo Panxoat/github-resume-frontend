@@ -33,7 +33,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
     <svg width={width || 500} height={height || 500}>
       {data && (
         <g transform="translate(${width / 2}, ${height / 2})">
-          <path d={arcGenerator()}></path>
+          {/* <path d={arcGenerator()}></path> */}
         </g>
       )}
     </svg>

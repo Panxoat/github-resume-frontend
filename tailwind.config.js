@@ -7,6 +7,15 @@ export default {
       dark: "#121212",
       "dark-200": "#0F1015",
     },
+    screens: {
+      mobile: "400px",
+
+      tablet: "640px",
+
+      laptop: "1024px",
+
+      desktop: "1280px",
+    },
   },
   variants: {
     extend: {},

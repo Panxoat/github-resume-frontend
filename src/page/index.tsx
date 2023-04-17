@@ -42,7 +42,7 @@ export const MainPage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-y-[50px] justify-center items-center">
+    <div className="w-full h-screen flex flex-col gap-y-[50px] justify-center items-center">
       <GithubLogo />
       <motion.input
         whileHover={{ scale: 1.2 }}
