@@ -1,29 +1,53 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { ReactComponent as CommitIcon } from "../assets/portfolio/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/language_icon.svg";
 
+import baseURL from "../api/axios";
+
+import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/portfolio/summaryBox";
-import { PieChart } from "../components/chart/pieChart";
+import { LineChart } from "../components/chart/lineChart";
+// import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData } from "../types/portfolio";
+import { useMemo } from "react";
+
+const boxVariants = {
+  hover: {
+    boxShadow: "0px 0px 15px 5px #6AD77C80",
+    scale: 1.002,
+    transition: {
+      duration: 0.3,
+      type: "tween",
+      ease: "easeOut",
+    },
+  },
+};
 
 export const Portfolio = () => {
-  const location = useLocation();
+  const { id } = useParams();
 
-  const { data } = useMemo(() => {
-    if (location.state) {
-      return location.state as IUserData;
+  const { data } = useQuery<IUserData, string>(
+    ["get_user_info"],
+    async () => {
+      const response = await baseURL.get(`/github/user/${id}`);
+
+      return response.data;
+    },
+    {
+      enabled: !!id,
+      onError: (error) => {
+        alert(error);
+      },
     }
-
-    return {
-      data: null,
-    };
-  }, [location.state]);
+  );
 
   return (
     <>
-      {!data && <div>loading...</div>}
+      {!data && <PortfolioSkeleton />}
 
       {data && (
         <article className="flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
@@ -42,7 +66,7 @@ export const Portfolio = () => {
   );
 };
 
-Portfolio.Aside = ({ data }: IUserData) => {
+Portfolio.Aside = ({ data }: { data: IUserData }) => {
   return (
     <>
       <section>
@@ -94,10 +118,31 @@ Portfolio.Aside = ({ data }: IUserData) => {
   );
 };
 
-Portfolio.Chart = ({ data }: IUserData) => {
+Portfolio.Chart = ({ data }: { data: IUserData }) => {
+  const timeIndex = useMemo(() => {
+    return data.contributions.monthlyContributionHistories.reduce(
+      (acc: string[], curr) => [...acc, `${curr.date.year}-${curr.date.month}`],
+      []
+    );
+  }, [data]);
+
+  const measure = useMemo(
+    () =>
+      data.contributions.monthlyContributionHistories.map(
+        (history) => history.contributionCount
+      ),
+    [data]
+  );
+
   return (
-    <section className="w-full">
-      <div className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between p-[40px] rounded-[12px] bg-[#1A1B24]">
+    <section className="cursor-pointer w-full">
+      <motion.div
+        variants={boxVariants}
+        initial="start"
+        animate="end"
+        whileHover="hover"
+        className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between p-[40px] rounded-[12px] bg-[#1A1B24]"
+      >
         <div className="w-full tablet:w-[40%] flex flex-col">
           <h1 className="text-[#ffffff] text-[28px] font-bold">
             {data.user.name}님의
@@ -109,15 +154,15 @@ Portfolio.Chart = ({ data }: IUserData) => {
             <span className="text-[#ffffff] text-[28px]">회</span>
           </p>
         </div>
-        <div className="w-full tablet:w-[60%] border border-[#e1e1e1]">
-          차트 공간
+        <div className="w-full tablet:w-[60%]">
+          <LineChart index={timeIndex} measure={measure} />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
 
-Portfolio.Summary = ({ data }: IUserData) => {
+Portfolio.Summary = ({ data }: { data: IUserData }) => {
   return (
     <div className="flex flex-wrap gap-y-[32px] gap-x-[30px]">
       <SummaryBox>
@@ -155,7 +200,7 @@ Portfolio.Summary = ({ data }: IUserData) => {
   );
 };
 
-Portfolio.LanguageSummary = ({ data }: IUserData) => {
+Portfolio.LanguageSummary = ({ data }: { data: IUserData }) => {
   return (
     <section className="w-full flex flex-col gap-y-[32px]">
       <div className="flex flex-col gap-y-[20px] p-[33px] rounded-[12px] bg-[#1A1B24]">

@@ -1,26 +1,36 @@
 export interface IUserData {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      introduce: string;
-      imageUrl: string;
-      contact: {
-        email: string;
-        websiteUrl: string | null;
-      };
+  user: {
+    id: string;
+    name: string;
+    introduce: string;
+    imageUrl: string;
+    contact: {
+      email: string;
+      websiteUrl: string | null;
     };
-    repositories: {
-      name: string;
-      description: string;
-      url: string;
-      language: string;
-      startCount: number;
-      owner: string;
+  };
+  repositories: {
+    name: string;
+    description: string;
+    url: string;
+    language: string;
+    startCount: number;
+    owner: string;
+  }[];
+  languages: {
+    rate: number;
+    name: string;
+  }[];
+  contributions: {
+    commitCount: number;
+    lastYear: number;
+    monthlyContributionHistories: {
+      contributionCount: number;
+      date: {
+        year: number;
+        month: number;
+      };
     }[];
-    languages: {
-      rate: number;
-      name: string;
-    }[];
+    recentMonthRange: number;
   };
 }

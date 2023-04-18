@@ -9,7 +9,7 @@ export const Router = () => {
   return (
     <Route path="/" element={<Container />}>
       <Route index element={<MainPage />} />
-      <Route path="portfolio" element={<Portfolio />} />
+      <Route path=":id" element={<Portfolio />} />
     </Route>
   );
 };

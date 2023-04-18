@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
 interface ISummaryBox {
@@ -6,16 +7,32 @@ interface ISummaryBox {
   className?: string;
 }
 
+const boxVariants = {
+  hover: {
+    boxShadow: "0px 0px 10px 5px #6AD77C80",
+    scale: 1.002,
+    transition: {
+      duration: 0.3,
+      type: "tween",
+      ease: "easeOut",
+    },
+  },
+};
+
 const SummaryBox = ({ children, className }: ISummaryBox) => {
   return (
-    <div
+    <motion.div
+      variants={boxVariants}
+      initial="start"
+      animate="end"
+      whileHover="hover"
       className={twMerge(
-        "flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[30px]",
+        "cursor-pointer flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[30px]",
         className
       )}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
 
