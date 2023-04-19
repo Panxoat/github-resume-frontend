@@ -11,6 +11,17 @@ export interface IDomMeasure {
   boundedHeight?: number;
 }
 
+interface IMeasure {
+  width: number;
+  height: number;
+  marginBottom: number;
+  marginLeft: number;
+  marginRight: number;
+  marginTop: number;
+  boundedWidth: number;
+  boundedHeight: number;
+}
+
 export const useDomMeasure = ({
   ml = 0,
   mr = 0,
@@ -23,7 +34,7 @@ export const useDomMeasure = ({
   mb?: number;
 }) => {
   const ref = useRef<HTMLElement | null>(null);
-  const [measure, setMeasure] = useState<IDomMeasure | undefined>();
+  const [measure, setMeasure] = useState<IMeasure | undefined>();
 
   useEffect(() => {
     if (ref.current) {

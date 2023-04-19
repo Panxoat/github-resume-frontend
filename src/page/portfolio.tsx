@@ -50,7 +50,7 @@ export const Portfolio = () => {
       {!data && <PortfolioSkeleton />}
 
       {data && (
-        <article className="flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
+        <article className="w-full h-screen flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
           <aside className="w-[20%] hidden tablet:block">
             <Portfolio.Aside data={data} />
           </aside>
@@ -154,7 +154,7 @@ Portfolio.Chart = ({ data }: { data: IUserData }) => {
             <span className="text-[#ffffff] text-[28px]">회</span>
           </p>
         </div>
-        <div className="w-full tablet:w-[60%]">
+        <div className="w-full h-full tablet:w-[60%]">
           <LineChart index={timeIndex} measure={measure} />
         </div>
       </motion.div>
