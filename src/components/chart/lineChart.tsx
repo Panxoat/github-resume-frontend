@@ -12,7 +12,7 @@ interface ILineChart {
 export const LineChart = ({ index, measure }: ILineChart) => {
   const { ref, measure: domMeasure } = useDomMeasure({
     mt: 0,
-    mb: 20,
+    mb: 25,
     ml: 50,
   });
 
@@ -23,6 +23,10 @@ export const LineChart = ({ index, measure }: ILineChart) => {
   const measureScale = scaleLinear()
     .domain([Math.floor(Math.min(...measure) / 10) * 10, Math.max(...measure)])
     .range([0, domMeasure?.boundedWidth || 0]);
+
+  const color = scaleLinear<string, number>()
+    .domain([Math.floor(Math.min(...measure) / 10) * 10, Math.max(...measure)])
+    .range(["rgba(14, 68, 41, 1)", "rgba(57, 211, 83, 1)"]);
 
   return (
     <article ref={ref} className="w-full h-full">
@@ -38,7 +42,8 @@ export const LineChart = ({ index, measure }: ILineChart) => {
               stroke="#393D50"
               tickStroke="#393D50"
               tickLabelProps={{
-                fill: "#FFFFFF",
+                fill: "#9DA2B9",
+                fontWeight: 700,
               }}
             />
           </g>
@@ -54,21 +59,22 @@ export const LineChart = ({ index, measure }: ILineChart) => {
               stroke="#393D50"
               tickStroke="#393D50"
               tickLabelProps={{
-                fill: "#FFFFFF",
+                fill: "#9DA2B9",
+                fontWeight: 700,
               }}
             />
           </g>
           <g>
             {measure.map((item, idx) => {
               const width = measureScale(item);
-              const height = dateScale.step();
+              const height = dateScale.step() / 2;
               const xPos = domMeasure.marginLeft;
-              const yPos = dateScale(index[idx]);
+              const yPos = (dateScale(index[idx]) || 0) + height / 2;
 
               return (
                 <motion.rect
                   stroke="#000"
-                  fill="#39D353"
+                  fill={String(color(item))}
                   width={width}
                   height={height}
                   x={xPos}

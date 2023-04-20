@@ -38,18 +38,25 @@ export const useDomMeasure = ({
 
   useEffect(() => {
     if (ref.current) {
-      const { clientWidth: width, clientHeight: height } = ref.current;
+      const observer = new ResizeObserver((entries) => {
+        const entrie = entries[0];
 
-      setMeasure({
-        width,
-        height,
-        marginBottom: mb,
-        marginLeft: ml,
-        marginRight: mr,
-        marginTop: mt,
-        boundedWidth: width - ml - mr,
-        boundedHeight: height - mt - mb,
+        const { width, height } = entrie.contentRect;
+
+        setMeasure({
+          width,
+          height,
+          marginBottom: mb,
+          marginLeft: ml,
+          marginRight: mr,
+          marginTop: mt,
+          boundedWidth: width - ml - mr,
+          boundedHeight: height - mt - mb,
+        });
       });
+
+      observer.observe(ref.current);
+      return () => observer.disconnect();
     }
   }, [ref, ml, mr, mt, mb]);
 

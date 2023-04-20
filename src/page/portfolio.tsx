@@ -10,7 +10,6 @@ import baseURL from "../api/axios";
 import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/portfolio/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
-// import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData } from "../types/portfolio";
 import { useMemo } from "react";
@@ -51,11 +50,11 @@ export const Portfolio = () => {
 
       {data && (
         <article className="w-full h-screen flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
-          <aside className="w-[20%] hidden tablet:block">
+          <aside className="p-3 w-[20%] hidden tablet:block">
             <Portfolio.Aside data={data} />
           </aside>
 
-          <div className="w-full tablet:w-[80%] flex flex-col gap-y-[32px]">
+          <div className="overflow-auto p-3 w-full tablet:w-[80%] flex flex-col gap-y-[32px]">
             <Portfolio.Chart data={data} />
             <Portfolio.Summary data={data} />
             <Portfolio.LanguageSummary data={data} />
@@ -67,6 +66,8 @@ export const Portfolio = () => {
 };
 
 Portfolio.Aside = ({ data }: { data: IUserData }) => {
+  const { id } = useParams();
+
   return (
     <>
       <section>
@@ -79,6 +80,7 @@ Portfolio.Aside = ({ data }: { data: IUserData }) => {
           <span className="text-[#EC8D03]">{data.user.name}</span>
           's Portfolio
         </p>
+        <p className="text-[14px] text-[#444859]">@{id}</p>
       </section>
 
       <section className="flex flex-col gap-y-[11px] pt-[40px]">
