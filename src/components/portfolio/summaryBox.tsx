@@ -39,7 +39,7 @@ const SummaryBox = ({ children, className }: ISummaryBox) => {
 SummaryBox.Title = ({ children, className }: ISummaryBox) => {
   return (
     <h3
-      className={twMerge("text-[#ffffff] text-[12px] font-medium", className)}
+      className={twMerge("text-[#ffffff] text-[15px] font-medium", className)}
     >
       {children}
     </h3>
