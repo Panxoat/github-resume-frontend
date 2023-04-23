@@ -1,18 +1,26 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+
 import { ReactComponent as CommitIcon } from "../assets/portfolio/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/language_icon.svg";
 
+import { ReactComponent as ProjectBanner } from "../assets/portfolio/project/project_banner.svg";
+import { ReactComponent as ForkIcon } from "../assets/portfolio/project/fork.svg";
+import { ReactComponent as StarIcon } from "../assets/portfolio/project/star.svg";
+import { ReactComponent as ArrowIcon } from "../assets/portfolio/project/arrow.svg";
+
 import baseURL from "../api/axios";
+import { useLanguageColor } from "../hooks/useLanguageColor";
+import { useInvertColor } from "../hooks/useColor";
 
 import { PortfolioSkeleton } from "../components/skeleton";
-import { SummaryBox } from "../components/portfolio/summaryBox";
+import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
 
 import type { IUserData } from "../types/portfolio";
-import { useMemo } from "react";
 
 const boxVariants = {
   hover: {
@@ -39,6 +47,16 @@ export const Portfolio = () => {
     {
       enabled: !!id,
       staleTime: 60000,
+      onSuccess: (data) => {
+        return {
+          ...data,
+          languages: data.languages.sort((a, b) => {
+            if (a.rate > b.rate) return -1;
+            if (a.rate < b.rate) return 1;
+            return 1;
+          }),
+        };
+      },
       onError: (error) => {
         alert(error);
       },
@@ -60,6 +78,7 @@ export const Portfolio = () => {
             <Portfolio.Summary data={data} />
             {/* <Portfolio.LanguageSummary data={data} /> */}
             <Portfolio.Share data={data} />
+            <Portfolio.Project data={data} />
           </div>
         </article>
       )}
@@ -263,16 +282,181 @@ Portfolio.LanguageSummary = ({ data }: { data: IUserData }) => {
 };
 
 Portfolio.Share = ({ data }: { data: IUserData }) => {
+  const { bgColor } = useLanguageColor();
+  const { invertColor, brightenColor } = useInvertColor();
+
   return (
-    <section className="mobile:pt-[66px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col items-center">
+    <section className="mobile:pt-[66px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col">
       <h1 className="mobile:text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
         🌐
         <br />
         언어 별 점유율
       </h1>
-      <h2 className="text-[20px] text-[#9DA2B9] pt-[14px]">
+      <h2 className="w-full text-center text-[20px] text-[#9DA2B9] pt-[14px]">
         어떤 언어를 가장 많이 사용할까요?
       </h2>
+
+      <div className="pt-[30px] flex flex-wrap items-center gap-x-[30px] gap-y-[20px]">
+        {data.languages.slice(0, 3).map((language, languageIdx) => (
+          <div
+            key={languageIdx}
+            style={{
+              color: invertColor(bgColor(language.name).color, true),
+              background: `linear-gradient(147.62deg, ${brightenColor(
+                bgColor(language.name).color,
+                10
+              )} 10.96%, ${brightenColor(
+                bgColor(language.name).color,
+                -30
+              )} 74.86%)`,
+            }}
+            className="flex flex-col flex-[1_0_20%] min-h-[231px] rounded-[12px] px-[34px] py-[30px]"
+          >
+            <p className="text-[24px] font-bold">{languageIdx + 1}위</p>
+            <p className="text-[24px] pt-[5px] font-semibold">
+              {language.name}
+            </p>
+            <p className="text-[20px]">{language.rate}%</p>
+            {/* <div className="w-full flex justify-end pt-[32px]">
+            </div> */}
+          </div>
+        ))}
+
+        <div className="flex flex-col flex-[1_0_20%] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
+          {data.languages.slice(4).map((language, languageIdx) => (
+            <div
+              key={languageIdx}
+              style={{
+                color: invertColor(bgColor(language.name).color, true),
+              }}
+              className="flex items-center gap-x-[10px] text-[16px] font-bold"
+            >
+              <span>{languageIdx + 4}위</span>
+              <div className="flex flex-col gap-x-[5px]">
+                <span>{language.name}</span>
+                <span className="text-[12px] font-medium">
+                  {language.rate}%
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const buttonVariants = {
+  hover: {
+    background: "#9DA2B9",
+    transition: {
+      duration: 0.3,
+      type: "tween",
+      ease: "easeOut",
+    },
+  },
+};
+
+Portfolio.Project = ({ data }: { data: IUserData }) => {
+  const { bgColor } = useLanguageColor();
+  const { invertColor, brightenColor } = useInvertColor();
+
+  const dotStyle = "w-[19px] h-[19px] rounded-full bg-[#ffffff]";
+
+  return (
+    <section className="flex flex-col gap-y-[30px] pt-[160px]">
+      <div className="flex w-full justify-between rounded-[12px] bg-[#12BD8B]">
+        <div className="h-full flex flex-col justify-between pl-[20px] py-[20px]">
+          <div
+            style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
+            className={dotStyle}
+          />
+          <div
+            style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
+            className={dotStyle}
+          />
+        </div>
+        <div className="w-full flex items-center justify-between px-[51px]">
+          <div className="flex flex-col py-[30px]">
+            <h1 className="text-[48px] text-[#ffffff] font-bold leading-[57px]">
+              주요 프로젝트
+              <br /> 모음집.zip
+            </h1>
+            <p className="text-[20px] text-[#ffffff] font-extralight pt-[16px]">
+              평가에 도움될만한 레포를 모아봤어요!
+            </p>
+          </div>
+          <ProjectBanner />
+        </div>
+        <div className="h-full flex flex-col justify-between pr-[20px] py-[20px]">
+          <div
+            style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
+            className={dotStyle}
+          />
+          <div
+            style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
+            className={dotStyle}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-[32px]">
+        {data.repositories.map((repositorie, repositorieIdx) => (
+          <div
+            key={repositorieIdx}
+            className="flex-[1_0_30%] h-fit rounded-[12px] overflow-hidden"
+          >
+            <div
+              style={{
+                color: invertColor(
+                  bgColor(repositorie.language)?.color || "#4C4C4C",
+                  true
+                ),
+                background: `linear-gradient(147.62deg, ${brightenColor(
+                  bgColor(repositorie.language)?.color || "#4C4C4C",
+                  10
+                )} 10.96%, ${brightenColor(
+                  bgColor(repositorie.language)?.color || "#4C4C4C",
+                  -30
+                )} 74.86%)`,
+              }}
+              className="relative flex flex-col gap-y-[7px] px-[20px] pt-[20px] pb-[23px]"
+            >
+              <h2 className="text-[24px] font-bold">{repositorie.name}</h2>
+              <p className="text-[16px] font-medium">
+                {repositorie.description}
+              </p>
+
+              <motion.button
+                variants={buttonVariants}
+                initial="start"
+                animate="end"
+                whileHover="hover"
+                onClick={() => {
+                  window.open(repositorie.url, "_blank");
+                }}
+                type="button"
+                className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50]"
+              >
+                <ArrowIcon />
+              </motion.button>
+            </div>
+
+            <div className="flex flex-col gap-y-[18px] bg-[#1A1B24] px-[20px] pt-[13px] pb-[17px]">
+              <div className="flex items-center gap-x-[18px]">
+                <div className="flex items-center gap-x-[6px]">
+                  <ForkIcon />
+                  <span className="text-[13px] text-[#9DA2B9]">0</span>
+                </div>
+                <div className="flex items-center gap-x-[6px]">
+                  <StarIcon />
+                  <span className="text-[13px] text-[#9DA2B9]">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
