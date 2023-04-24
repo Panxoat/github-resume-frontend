@@ -346,17 +346,6 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
   );
 };
 
-const buttonVariants = {
-  hover: {
-    background: "#9DA2B9",
-    transition: {
-      duration: 0.3,
-      type: "tween",
-      ease: "easeOut",
-    },
-  },
-};
-
 Portfolio.Project = ({ data }: { data: IUserData }) => {
   const { bgColor } = useLanguageColor();
   const { invertColor, brightenColor } = useInvertColor();
@@ -400,7 +389,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-[32px]">
+      <div className="w-full flex flex-wrap gap-[32px]">
         {data.repositories.map((repositorie, repositorieIdx) => (
           <div
             key={repositorieIdx}
@@ -427,31 +416,41 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
                 {repositorie.description}
               </p>
 
-              <motion.button
-                variants={buttonVariants}
-                initial="start"
-                animate="end"
-                whileHover="hover"
+              <button
                 onClick={() => {
                   window.open(repositorie.url, "_blank");
                 }}
                 type="button"
-                className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50]"
+                className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50] hover:bg-[#9DA2B9] transition-all"
               >
                 <ArrowIcon />
-              </motion.button>
+              </button>
             </div>
 
             <div className="flex flex-col gap-y-[18px] bg-[#1A1B24] px-[20px] pt-[13px] pb-[17px]">
               <div className="flex items-center gap-x-[18px]">
                 <div className="flex items-center gap-x-[6px]">
                   <ForkIcon />
-                  <span className="text-[13px] text-[#9DA2B9]">0</span>
+                  <span className="text-[13px] text-[#9DA2B9]">
+                    {repositorie.forkCount}
+                  </span>
                 </div>
                 <div className="flex items-center gap-x-[6px]">
                   <StarIcon />
-                  <span className="text-[13px] text-[#9DA2B9]">0</span>
+                  <span className="text-[13px] text-[#9DA2B9]">
+                    {repositorie.starCount}
+                  </span>
                 </div>
+              </div>
+              <div className="flex flex-wrap gap-x-[5px] gap-y-[8px]">
+                {repositorie.topics.map((topic, topicIdx) => (
+                  <div
+                    key={topicIdx}
+                    className="flex items-center justify-center px-[13px] py-[3px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                  >
+                    # {topic}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

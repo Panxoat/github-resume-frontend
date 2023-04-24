@@ -16,6 +16,9 @@ export interface IUserData {
     language: string;
     startCount: number;
     owner: string;
+    topics: string[];
+    forkCount: number;
+    starCount: number;
   }[];
   languages: {
     rate: number;
