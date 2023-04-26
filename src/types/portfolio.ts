@@ -19,6 +19,7 @@ export interface IUserData {
     topics: string[];
     forkCount: number;
     starCount: number;
+    homepageUrl: string;
   }[];
   languages: {
     rate: number;
