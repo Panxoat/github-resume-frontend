@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 
 import { useParams } from "react-router-dom";
@@ -6,11 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ReactComponent as CommitIcon } from "../assets/portfolio/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/language_icon.svg";
+import { ReactComponent as ProjectIcon } from "../assets/portfolio/project_icon.svg";
 
 import { ReactComponent as ProjectBanner } from "../assets/portfolio/project/project_banner.svg";
 import { ReactComponent as ForkIcon } from "../assets/portfolio/project/fork.svg";
 import { ReactComponent as StarIcon } from "../assets/portfolio/project/star.svg";
 import { ReactComponent as ArrowIcon } from "../assets/portfolio/project/arrow.svg";
+import { ReactComponent as LinkIcon } from "../assets/portfolio/project/link.svg";
 
 import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
@@ -63,6 +65,11 @@ export const Portfolio = () => {
     }
   );
 
+  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
+  const overviewRef = useRef<HTMLElement | null>(null);
+  const shareRef = useRef<HTMLElement | null>(null);
+  const projectRef = useRef<HTMLElement | null>(null);
+
   return (
     <>
       {!data && <PortfolioSkeleton />}
@@ -70,15 +77,33 @@ export const Portfolio = () => {
       {data && (
         <article className="w-full h-screen flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
           <aside className="p-3 w-[20%] hidden tablet:block">
-            <Portfolio.Aside data={data} />
+            <Portfolio.Aside
+              data={data}
+              scrollRef={{
+                scrollTarget: scrollTargetRef,
+                overview: overviewRef,
+                share: shareRef,
+                project: projectRef,
+              }}
+            />
           </aside>
 
-          <div className="overflow-auto p-3 w-full tablet:w-[80%] flex flex-col gap-y-[32px]">
-            <Portfolio.OverView data={data} />
-            <Portfolio.Summary data={data} />
-            {/* <Portfolio.LanguageSummary data={data} /> */}
-            <Portfolio.Share data={data} />
-            <Portfolio.Project data={data} />
+          <div
+            ref={scrollTargetRef}
+            className="overflow-auto p-3 w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
+          >
+            <article ref={overviewRef}>
+              <Portfolio.OverView data={data} />
+            </article>
+            <article>
+              <Portfolio.Summary data={data} />
+            </article>
+            <article ref={shareRef}>
+              <Portfolio.Share data={data} />
+            </article>
+            <article ref={projectRef}>
+              <Portfolio.Project data={data} />
+            </article>
           </div>
         </article>
       )}
@@ -86,8 +111,20 @@ export const Portfolio = () => {
   );
 };
 
-Portfolio.Aside = ({ data }: { data: IUserData }) => {
+Portfolio.Aside = ({
+  data,
+  scrollRef,
+}: {
+  data: IUserData;
+  scrollRef: {
+    scrollTarget: React.MutableRefObject<HTMLDivElement | null>;
+    overview: React.MutableRefObject<HTMLElement | null>;
+    share: React.MutableRefObject<HTMLElement | null>;
+    project: React.MutableRefObject<HTMLElement | null>;
+  };
+}) => {
   const { id } = useParams();
+  const { scrollTarget, overview, share, project } = scrollRef;
 
   return (
     <>
@@ -111,7 +148,16 @@ Portfolio.Aside = ({ data }: { data: IUserData }) => {
           <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#1A1B24]">
             <CommitIcon />
           </div>
-          <span className="text-[#9DA2B9] text-[16px] font-bold">
+          <span
+            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            onClick={() => {
+              scrollTarget.current?.scroll({
+                top: overview.current?.clientTop,
+                left: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
             전체 커밋 카운트
           </span>
         </div>
@@ -119,23 +165,36 @@ Portfolio.Aside = ({ data }: { data: IUserData }) => {
           <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#1A1B24]">
             <LanguageIcon />
           </div>
-          <span className="text-[#9DA2B9] text-[16px] font-bold">
+          <span
+            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            onClick={() => {
+              scrollTarget.current?.scroll({
+                top: share.current?.clientHeight,
+                left: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
             언어 별 점유율
           </span>
         </div>
-      </section>
-
-      <section className="flex flex-col gap-y-[11px] pt-[40px]">
-        <p className="text-[#393D50] text-[16px]">Project</p>
-
-        {data.repositories.map((repo, repoIdx) => (
-          <div className="flex items-center gap-x-[11px]" key={repoIdx}>
-            <div className="w-[36px] h-[36px] rounded-[8px] bg-[#1A1B24]" />
-            <span className="text-[#9DA2B9] text-[16px] font-bold">
-              {repo.name}
-            </span>
+        <div className="flex items-center gap-x-[11px]">
+          <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#1A1B24]">
+            <ProjectIcon />
           </div>
-        ))}
+          <span
+            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            onClick={() => {
+              scrollTarget.current?.scroll({
+                top: project.current?.clientHeight,
+                left: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
+            주요 프로젝트 목록
+          </span>
+        </div>
       </section>
     </>
   );
@@ -213,7 +272,7 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
   }, [data]);
 
   return (
-    <div className="flex flex-wrap gap-y-[32px] gap-x-[30px]">
+    <section className="flex flex-wrap gap-y-[32px] gap-x-[30px]">
       <SummaryBox>
         <SummaryBox.Title>2023년 총 커밋 횟수</SummaryBox.Title>
         <SummaryBox.Content>
@@ -249,34 +308,6 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
           Forestia-Front
         </SummaryBox.Content>
       </SummaryBox>
-    </div>
-  );
-};
-
-Portfolio.LanguageSummary = ({ data }: { data: IUserData }) => {
-  return (
-    <section className="w-full flex flex-col gap-y-[32px]">
-      <div className="flex flex-col gap-y-[20px] p-[33px] rounded-[12px] bg-[#1A1B24]">
-        <h1 className="text-[#ffffff] text-[24px] font-bold">언어 별 점유율</h1>
-
-        <div className="flex flex-col tablet:flex-row justify-between">
-          <aside className="w-full talbet:w-[40%] overflow-auto">
-            {data.languages.map((language, languageIdx) => (
-              <div key={languageIdx} className="flex items-center gap-x-[5px]">
-                <div className="w-[6px] h-[6px] bg-[#efefef]" />
-                <p className="text-[20px] font-medium">
-                  <span className="text-[#ffffff]">{language.name}</span>{" "}
-                  <span className="text-[#9DA2B9]">{language.rate}%</span>
-                </p>
-              </div>
-            ))}
-          </aside>
-
-          <div className="w-full tablet:w-[60%]">
-            {/* <PieChart data={data.languages} /> */}
-          </div>
-        </div>
-      </div>
     </section>
   );
 };
@@ -371,7 +402,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
   return (
     <section className="flex flex-col gap-y-[30px] pt-[160px]">
       <div className="flex w-full justify-between rounded-[12px] bg-[#12BD8B]">
-        <div className="h-full flex flex-col justify-between pl-[20px] py-[20px]">
+        <div className="flex flex-col justify-between pl-[20px] py-[20px]">
           <div
             style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
             className={dotStyle}
@@ -393,7 +424,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
           </div>
           <ProjectBanner />
         </div>
-        <div className="h-full flex flex-col justify-between pr-[20px] py-[20px]">
+        <div className="flex flex-col justify-between pr-[20px] py-[20px]">
           <div
             style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
             className={dotStyle}
@@ -416,7 +447,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
                 {repositories.map((repositorie, repositorieIdx) => (
                   <li
                     key={repositorieIdx}
-                    className="rounded-[12px] overflow-hidden"
+                    className="group rounded-[12px] overflow-hidden"
                   >
                     <div
                       style={{
@@ -446,7 +477,8 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
                           window.open(repositorie.url, "_blank");
                         }}
                         type="button"
-                        className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50] hover:bg-[#9DA2B9] transition-all"
+                        style={{ transition: "all 0.2s" }}
+                        className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50] hover:bg-[#9DA2B9]"
                       >
                         <ArrowIcon />
                       </button>
@@ -477,6 +509,22 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
                           </div>
                         ))}
                       </div>
+                      {repositorie.homepageUrl && (
+                        <div
+                          style={{ transition: "all 0.3s" }}
+                          className="h-0 p-0 group-hover:h-auto group-hover:px-[13px] group-hover:py-[8px] cursor-pointer group flex items-center gap-x-[11px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                        >
+                          <LinkIcon className="h-0 group-hover:h-auto" />
+                          <a
+                            href={repositorie.homepageUrl}
+                            rel="noreferrer"
+                            target="_blank"
+                            className="hidden group-hover:block truncate text-[12px] text-[#FFFFFF] font-medium hover:underline"
+                          >
+                            {repositorie.homepageUrl}
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </li>
                 ))}

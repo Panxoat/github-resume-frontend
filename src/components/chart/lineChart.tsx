@@ -73,6 +73,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
 
               return (
                 <motion.rect
+                  key={idx}
                   stroke="#000"
                   fill={String(color(item))}
                   width={width}
