@@ -348,8 +348,6 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
               {language.name}
             </p>
             <p className="text-[20px]">{language.rate}%</p>
-            {/* <div className="w-full flex justify-end pt-[32px]">
-            </div> */}
           </div>
         ))}
 
@@ -437,7 +435,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
       </div>
 
       <ul
-        className="mx-auto max-w-2xl gap-6 grid grid-cols-1 tablet:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 mobile:gap-8"
+        className=" max-w-2xl gap-6 grid grid-cols-1 tablet:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 mobile:gap-8"
         role="list"
       >
         {customRepositoriesData(2, data.repositories).map(
