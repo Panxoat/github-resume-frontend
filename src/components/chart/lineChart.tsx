@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { AxisLeft, AxisBottom, Orientation } from "@visx/axis";
+import { getStringWidth } from "@visx/text";
 
 import { useDomMeasure } from "../../hooks/useDomMeasure";
 
@@ -21,7 +22,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
     .range([domMeasure?.boundedHeight || 0, 0]);
 
   const measureScale = scaleLinear()
-    .domain([Math.floor(Math.min(...measure) / 10) * 10, Math.max(...measure)])
+    .domain([0, Math.max(...measure)])
     .range([0, domMeasure?.boundedWidth || 0]);
 
   const color = scaleLinear<string, number>()
@@ -66,21 +67,40 @@ export const LineChart = ({ index, measure }: ILineChart) => {
           </g>
           <g>
             {measure.map((item, idx) => {
-              const width = measureScale(item);
+              const measure = measureScale(item);
               const height = dateScale.step() / 2;
               const xPos = domMeasure.marginLeft;
               const yPos = (dateScale(index[idx]) || 0) + height / 2;
 
               return (
-                <motion.rect
-                  key={idx}
-                  stroke="#000"
-                  fill={String(color(item))}
-                  width={width}
-                  height={height}
-                  x={xPos}
-                  y={yPos}
-                />
+                <>
+                  <motion.rect
+                    key={idx}
+                    stroke="#000"
+                    fill={String(color(item))}
+                    width={measure}
+                    height={height}
+                    x={xPos}
+                    y={yPos}
+                  />
+                  <text
+                    x={
+                      measure +
+                      domMeasure.marginLeft -
+                      (getStringWidth(String(Math.round(measure)), {
+                        "font-size": 10,
+                      }) || 0) -
+                      5
+                    }
+                    y={yPos}
+                    dy={12}
+                    fill="#fff"
+                    textAnchor="start"
+                    fontSize={10}
+                  >
+                    {Math.round(measure)}
+                  </text>
+                </>
               );
             })}
           </g>

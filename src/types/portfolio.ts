@@ -8,6 +8,7 @@ export interface IUserData {
       email: string;
       websiteUrl: string | null;
     };
+    repositoryCount: number;
   };
   repositories: {
     name: string;

@@ -249,9 +249,9 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
         initial="start"
         animate="end"
         whileHover="hover"
-        className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between p-[40px] rounded-[12px] bg-[#1A1B24]"
+        className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between rounded-[12px] bg-[#1A1B24]"
       >
-        <div className="w-full tablet:w-[40%] flex flex-col">
+        <div className="w-full tablet:w-[40%] flex flex-col py-[40px] pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
             {data.user.name}님의
             <br /> 최근 {data.contributions.recentMonthRange}개월 커밋 횟수
@@ -268,7 +268,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
             </span>
           </p>
         </div>
-        <div className="w-full h-full tablet:w-[60%]">
+        <div className="w-full h-[200px] tablet:w-[60%] pr-[40px]">
           <LineChart index={timeIndex} measure={measure} />
         </div>
       </motion.div>
@@ -311,7 +311,7 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
         <SummaryBox.Title>총 레포지토리 개수</SummaryBox.Title>
         <SummaryBox.Content>
           <span className="text-[#39D353] text-[24px] font-bold">
-            {data.repositories.length}
+            {data.user.repositoryCount}
           </span>
           <span className="text-[#ffffff] text-[24px] font-bold">개</span>
         </SummaryBox.Content>
@@ -382,10 +382,10 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
               style={{
                 color: invertColor(bgColor(language.name).color, true),
               }}
-              className="flex items-center gap-x-[10px] text-[16px] font-bold"
+              className="flex items-center tablet:justify-center gap-x-[10px] text-[16px] font-bold"
             >
               <span>{languageIdx + 4}위</span>
-              <div className="flex flex-col gap-x-[5px]">
+              <div className="flex tablet:flex-row tablet:items-center pc:flex-col gap-x-[5px]">
                 <span>{language.name}</span>
                 <span className="text-[12px] font-medium">
                   {language.rate}%
