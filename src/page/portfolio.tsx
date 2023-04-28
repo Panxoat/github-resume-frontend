@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { ReactComponent as CommitIcon } from "../assets/portfolio/commit_icon.svg";
-import { ReactComponent as LanguageIcon } from "../assets/portfolio/language_icon.svg";
-import { ReactComponent as ProjectIcon } from "../assets/portfolio/project_icon.svg";
+import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
+import { ReactComponent as CommitIcon } from "../assets/portfolio/aside/commit_icon.svg";
+import { ReactComponent as LanguageIcon } from "../assets/portfolio/aside/language_icon.svg";
+import { ReactComponent as ProjectIcon } from "../assets/portfolio/aside/project_icon.svg";
 
 import { ReactComponent as ProjectBanner } from "../assets/portfolio/project/project_banner.svg";
 import { ReactComponent as ForkIcon } from "../assets/portfolio/project/fork.svg";
@@ -139,6 +140,29 @@ Portfolio.Aside = ({
           's Portfolio
         </p>
         <p className="text-[14px] text-[#444859]">@{id}</p>
+        <p className="text-[16px] text-[#9DA2B9] font-medium pt-[17px]">
+          {data.user.introduce}
+        </p>
+
+        <div className="flex items-center gap-x-[13px] pt-[25px]">
+          <a
+            href={`mailto:${data.user.contact.email}`}
+            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+          >
+            <EmailIcon className="group-hover:[&>path]:fill-[#000000]" />
+          </a>
+          <button
+            disabled={!data.user.contact.websiteUrl}
+            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+            onClick={() => {
+              if (data.user.contact.websiteUrl) {
+                window.open(data.user.contact.websiteUrl, "_blank");
+              }
+            }}
+          >
+            <LinkIcon className="w-[16px] h-[16px] [&>path]:fill-[#9DA2B9] group-hover:[&>path]:fill-[#000000]" />
+          </button>
+        </div>
       </section>
 
       <section className="flex flex-col gap-y-[11px] pt-[40px]">
