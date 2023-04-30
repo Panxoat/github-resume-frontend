@@ -298,7 +298,9 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
   return (
     <section className="flex flex-wrap gap-y-[32px] gap-x-[30px]">
       <SummaryBox>
-        <SummaryBox.Title>2023년 총 커밋 횟수</SummaryBox.Title>
+        <SummaryBox.Title>
+          {data.contributions.year}년 총 커밋 횟수
+        </SummaryBox.Title>
         <SummaryBox.Content>
           <span className="text-[#39D353] text-[24px] font-bold">
             {data.contributions.commitCount}

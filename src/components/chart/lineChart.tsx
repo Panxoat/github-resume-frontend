@@ -89,8 +89,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
                       domMeasure.marginLeft -
                       (getStringWidth(String(Math.round(measure)), {
                         "font-size": 10,
-                      }) || 0) -
-                      5
+                      }) || 0)
                     }
                     y={yPos}
                     dy={12}
@@ -98,7 +97,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
                     textAnchor="start"
                     fontSize={10}
                   >
-                    {Math.round(measure)}
+                    {Math.round(item)}
                   </text>
                 </>
               );

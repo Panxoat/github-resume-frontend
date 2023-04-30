@@ -7,6 +7,10 @@ export interface IUserData {
     contact: {
       email: string;
       websiteUrl: string | null;
+      socialAccounts: {
+        name: string;
+        url: string;
+      }[];
     };
     repositoryCount: number;
   };
@@ -28,7 +32,7 @@ export interface IUserData {
   }[];
   contributions: {
     commitCount: number;
-    lastYear: number;
+    year: number;
     monthlyContributionHistories: {
       contributionCount: number;
       date: {

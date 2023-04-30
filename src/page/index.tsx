@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
 
-import { ReactComponent as Symbol } from "../assets/symbol.svg";
-import { ReactComponent as GithubLogo } from "../assets/github-logo.svg";
-import { ReactComponent as ArrowIcon } from "../assets/arrow.svg";
+import { ReactComponent as Symbol } from "../assets/landing/symbol.svg";
+import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
+import { ReactComponent as ArrowIcon } from "../assets/landing/arrow.svg";
+import { ReactComponent as NotFoundIcon } from "../assets/landing/not_found_icon.svg";
+
+import baseURL from "../api/axios";
+
+import { Spinner } from "../components/ui/Spinner";
+import { AxiosError } from "axios";
 
 const landingVariants = {
   initial: {
@@ -36,9 +43,23 @@ export const MainPage = () => {
     }
   }, [inputRef.current]);
 
-  const onSubmit = () => {
-    navigate(`/${id}`);
-  };
+  const { mutate, isLoading, error } = useMutation<unknown, AxiosError, string>(
+    ["get_user_info"],
+    async (id) => {
+      const response = await baseURL.get(`/github/user/${id}`);
+
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        navigate(`/${id}`);
+      },
+      onError: (error) => {
+        console.log(error);
+        return error;
+      },
+    }
+  );
 
   return (
     <div className="w-full max-w-[1440px] mx-auto h-screen flex flex-col justify-center gap-y-[103px] px-[70px] py-[76px]">
@@ -77,7 +98,7 @@ export const MainPage = () => {
           className="flex justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit();
+            mutate(id);
           }}
         >
           <div className="flex w-full gap-x-[6px] items-center">
@@ -95,9 +116,15 @@ export const MainPage = () => {
           </div>
           <button
             type="submit"
-            className="flex items-center justify-center w-[31px] h-[31px] rounded-full bg-[#393D50]"
+            className="flex flex-shrink-0 items-center justify-center w-[31px] h-[31px] rounded-full bg-[#393D50]"
           >
-            <ArrowIcon />
+            {error ? (
+              <>{error.response?.status === 404 && <NotFoundIcon />}</>
+            ) : isLoading ? (
+              <Spinner />
+            ) : (
+              <ArrowIcon />
+            )}
           </button>
         </form>
       </section>
