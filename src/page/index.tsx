@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { clsx } from "clsx";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
@@ -43,7 +44,11 @@ export const MainPage = () => {
     }
   }, [inputRef.current]);
 
-  const { mutate, isLoading, error } = useMutation<unknown, AxiosError, string>(
+  const { mutate, isLoading, error, reset } = useMutation<
+    unknown,
+    AxiosError,
+    string
+  >(
     ["get_user_info"],
     async (id) => {
       const response = await baseURL.get(`/github/user/${id}`);
@@ -55,11 +60,18 @@ export const MainPage = () => {
         navigate(`/${id}`);
       },
       onError: (error) => {
-        console.log(error);
         return error;
       },
     }
   );
+
+  const notFoundUser = useMemo(() => {
+    if (error) {
+      return error.response?.status === 404;
+    }
+
+    return false;
+  }, [error]);
 
   return (
     <div className="w-full max-w-[1440px] mx-auto h-screen flex flex-col justify-center gap-y-[103px] px-[70px] py-[76px]">
@@ -93,7 +105,18 @@ export const MainPage = () => {
           </h1>
         </motion.div>
 
-        <form
+        <motion.form
+          animate={
+            notFoundUser
+              ? {
+                  marginRight: [0, 10, -10, 0],
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.4,
+            times: [0, 1],
+          }}
           style={{ boxShadow: "0px 4px 10px 0px #00000040 inset" }}
           className="flex justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]"
           onSubmit={(e) => {
@@ -107,26 +130,36 @@ export const MainPage = () => {
               ref={inputRef}
               value={id}
               onChange={(e) => {
+                if (notFoundUser) {
+                  reset();
+                }
                 setId(e.target.value);
               }}
               type="text"
               placeholder="GitHub ID 입력"
-              className="w-full"
+              className={clsx("w-full outline-none", {
+                "text-[#CD0000]": notFoundUser,
+              })}
             />
           </div>
           <button
             type="submit"
-            className="flex flex-shrink-0 items-center justify-center w-[31px] h-[31px] rounded-full bg-[#393D50]"
+            className={clsx(
+              "flex flex-shrink-0 items-center justify-center w-[31px] h-[31px] rounded-full bg-[#393D50]",
+              {
+                "bg-[#CD0000]": notFoundUser,
+              }
+            )}
           >
             {error ? (
-              <>{error.response?.status === 404 && <NotFoundIcon />}</>
+              <>{notFoundUser && <NotFoundIcon />}</>
             ) : isLoading ? (
               <Spinner />
             ) : (
               <ArrowIcon />
             )}
           </button>
-        </form>
+        </motion.form>
       </section>
     </div>
   );
