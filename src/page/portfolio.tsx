@@ -19,6 +19,8 @@ import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
 import { useInvertColor } from "../hooks/useColor";
 
+import { Tooltip } from "../components/ui/Tooltip";
+
 import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
@@ -145,23 +147,38 @@ Portfolio.Aside = ({
         </p>
 
         <div className="flex items-center gap-x-[13px] pt-[25px]">
-          <a
-            href={`mailto:${data.user.contact.email}`}
-            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+          <Tooltip
+            title={`${
+              data.user.contact.email
+                ? data.user.contact.email
+                : "이메일이 존재하지 않습니다"
+            }`}
           >
-            <EmailIcon className="group-hover:[&>path]:fill-[#000000]" />
-          </a>
-          <button
-            disabled={!data.user.contact.websiteUrl}
-            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
-            onClick={() => {
-              if (data.user.contact.websiteUrl) {
-                window.open(data.user.contact.websiteUrl, "_blank");
-              }
-            }}
+            <a
+              href={`mailto:${data.user.contact.email}`}
+              className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+            >
+              <EmailIcon className="group-hover:[&>path]:fill-[#000000]" />
+            </a>
+          </Tooltip>
+          <Tooltip
+            title={`${
+              data.user.contact.websiteUrl
+                ? data.user.contact.websiteUrl
+                : "웹사이트가 존재하지 않습니다"
+            }`}
           >
-            <LinkIcon className="w-[16px] h-[16px] [&>path]:fill-[#9DA2B9] group-hover:[&>path]:fill-[#000000]" />
-          </button>
+            <button
+              className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+              onClick={() => {
+                if (data.user.contact.websiteUrl) {
+                  window.open(data.user.contact.websiteUrl, "_blank");
+                }
+              }}
+            >
+              <LinkIcon className="w-[16px] h-[16px] [&>path]:fill-[#9DA2B9] group-hover:[&>path]:fill-[#000000]" />
+            </button>
+          </Tooltip>
         </div>
       </section>
 
@@ -263,9 +280,14 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
             <span className="text-[#39D353] text-[30px] tablet:text-[36px] desktop:text-[42px]">
               {accMeasure}
             </span>
-            <span className="text-[#ffffff] text-[22px] tablet:text-[26px] desktop:text-[28px]">
+            <span className="text-[#ffffff] text-[22px] tablet:text-[26px] desktop:text-[28px] pr-[10px]">
               회
             </span>
+            <Tooltip title="커밋 + 코드리뷰 + PR + 이슈">
+              <span className="cursor-default text-[#ffffff] font-medium">
+                ⓘ
+              </span>
+            </Tooltip>
           </p>
         </div>
         <div className="w-full h-[200px] tablet:w-[60%] pr-[40px]">
