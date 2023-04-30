@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
@@ -26,6 +26,7 @@ import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
 
 import type { IUserData } from "../types/portfolio";
+import { AxiosError } from "axios";
 
 const boxVariants = {
   hover: {
@@ -41,8 +42,9 @@ const boxVariants = {
 
 export const Portfolio = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  const { data } = useQuery<IUserData, string>(
+  const { data } = useQuery<IUserData, AxiosError>(
     ["get_user_info"],
     async () => {
       const response = await baseURL.get(`/github/user/${id}`);
@@ -51,6 +53,7 @@ export const Portfolio = () => {
     },
     {
       enabled: !!id,
+      retry: false,
       staleTime: 60000,
       onSuccess: (data) => {
         return {
@@ -63,7 +66,9 @@ export const Portfolio = () => {
         };
       },
       onError: (error) => {
-        alert(error);
+        if (error.response?.status === 404) {
+          navigate("/404");
+        }
       },
     }
   );
@@ -351,9 +356,9 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
       </SummaryBox>
 
       <SummaryBox>
-        <SummaryBox.Title>최다 커밋 레포</SummaryBox.Title>
+        <SummaryBox.Title>최근 커밋 레포</SummaryBox.Title>
         <SummaryBox.Content className="text-[#F7DF1E] text-[24px] font-bold  max-w-full truncate">
-          Forestia-Front
+          {data.contributions.latestCommittedRepository.name}
         </SummaryBox.Content>
       </SummaryBox>
     </section>
@@ -399,7 +404,7 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
           </div>
         ))}
 
-        <div className="flex flex-col flex-[1_0_20%] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
+        <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
           {data.languages.slice(4).map((language, languageIdx) => (
             <div
               key={languageIdx}

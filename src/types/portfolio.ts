@@ -33,6 +33,10 @@ export interface IUserData {
   contributions: {
     commitCount: number;
     year: number;
+    latestCommittedRepository: {
+      name: string;
+      url: string;
+    };
     monthlyContributionHistories: {
       contributionCount: number;
       date: {
