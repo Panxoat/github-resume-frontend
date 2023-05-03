@@ -1,25 +1,37 @@
 import clsx from "clsx";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 import "./Tooltip.css";
 
+interface TooltipProps {
+  textClassName?: string;
+  rootClassName?: string;
+  children: React.ReactNode;
+  title: React.ReactNode | string;
+  disabled?: boolean;
+}
+
 export const Tooltip = ({
+  textClassName,
+  rootClassName,
   children,
   title,
   disabled,
-}: {
-  children: React.ReactNode;
-  title: string;
-  disabled?: boolean;
-}) => {
+}: TooltipProps) => {
   return (
     <div
-      className={clsx("tooltip", {
-        "pointer-events-none": disabled,
-      })}
+      className={twMerge(
+        clsx("tooltip ", {
+          "pointer-events-none": disabled,
+        }),
+        rootClassName
+      )}
     >
       {children}
-      <span className="tooltiptext text-[15px]">{title}</span>
+      <span className={twMerge("tooltiptext text-[15px]", textClassName)}>
+        {title}
+      </span>
     </div>
   );
 };

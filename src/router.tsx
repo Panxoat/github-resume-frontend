@@ -8,10 +8,13 @@ import { NotFoundPage } from "./page/404";
 
 export const Router = () => {
   return (
-    <Route path="/" element={<Container />}>
-      <Route index element={<MainPage />} />
-      <Route path=":id" element={<Portfolio />} />
-      <Route path="404" element={<NotFoundPage />} />
-    </Route>
+    <>
+      <Route path="/" element={<Container />}>
+        <Route index element={<MainPage />} />
+        <Route path=":id" element={<Portfolio />} />
+        <Route path="404" element={<NotFoundPage />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
+    </>
   );
 };

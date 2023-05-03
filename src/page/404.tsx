@@ -5,7 +5,7 @@ export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
-    <article className="h-screen flex flex-col gap-y-[35px] items-center justify-center">
+    <article className="h-screen flex flex-col gap-y-[35px] items-center justify-center bg-dark-200">
       <p className="text-[18px] text-[#666666] font-semibold">GitHub Resume</p>
       <section>
         <div className="w-[580px] flex flex-col items-center py-[34px] rounded-[12px] bg-[#D9D9D9] overflow-hidden">

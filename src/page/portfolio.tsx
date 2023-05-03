@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
+
 import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
 import { ReactComponent as CommitIcon } from "../assets/portfolio/aside/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/aside/language_icon.svg";
@@ -18,6 +20,7 @@ import { ReactComponent as LinkIcon } from "../assets/portfolio/project/link.svg
 import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
 import { useInvertColor } from "../hooks/useColor";
+import { getDateAlias } from "../hooks/getDateAlias";
 
 import { Tooltip } from "../components/ui/Tooltip";
 
@@ -137,16 +140,41 @@ Portfolio.Aside = ({
   return (
     <>
       <section>
-        <img
-          className="w-[60px] h-[60px] rounded-full"
-          src={data.user.imageUrl}
-          alt="profileImage"
-        />
-        <p className="text-[#9DA2B9] text-[28px] font-bold">
-          <span className="text-[#EC8D03]">{data.user.name}</span>
-          's Portfolio
-        </p>
-        <p className="text-[14px] text-[#444859]">@{id}</p>
+        <div
+          className="group flex flex-col"
+          onClick={() => {
+            window.open(`https://github.com/${data.user.id}`, "_blank");
+          }}
+        >
+          <Tooltip
+            textClassName="!left-[60%] !bottom-[calc(100%-50px)]"
+            title={
+              <div className="flex items-center gap-x-[5px] px-[4px] py-[5px] text-[15px] text-[#D9D9D9] font-medium">
+                <GithubLogo className="[&>path]:fill-[#D9D9D9]" />
+                <span>Github로 이동</span>
+              </div>
+            }
+          >
+            <div className="flex items-center gap-x-[12px]">
+              <img
+                className="cursor-pointer w-[60px] h-[60px] rounded-full group-hover:scale-110 group-hover:shadow-[0px_0px_20px_1px_grey]"
+                src={data.user.imageUrl}
+                alt="profileImage"
+              />
+            </div>
+            <p className="cursor-pointer text-[28px] font-bold">
+              <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
+                {data.user.name}
+              </span>
+              <span className="group-hover:underline decoration-[#9DA2B9] text-[#9DA2B9]">
+                's Portfolio
+              </span>
+            </p>
+          </Tooltip>
+          <p className="cursor-pointer group-hover:underline text-[14px] text-[#444859]">
+            @{id}
+          </p>
+        </div>
         <p className="text-[16px] text-[#9DA2B9] font-medium pt-[17px]">
           {data.user.introduce}
         </p>
@@ -249,7 +277,12 @@ Portfolio.Aside = ({
 Portfolio.OverView = ({ data }: { data: IUserData }) => {
   const timeIndex = useMemo(() => {
     return data.contributions.monthlyContributionHistories.reduce(
-      (acc: string[], curr) => [...acc, `${curr.date.year}-${curr.date.month}`],
+      (acc: string[], curr) => [
+        ...acc,
+        `${curr.date.year}-${
+          curr.date.month > 9 ? curr.date.month : `0${curr.date.month}`
+        }`,
+      ],
       []
     );
   }, [data]);

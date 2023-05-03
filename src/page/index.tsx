@@ -74,7 +74,7 @@ export const MainPage = () => {
   }, [error]);
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto h-screen flex flex-col justify-center gap-y-[103px] px-[70px] py-[76px]">
+    <article className="w-full max-w-[1440px] mx-auto h-screen flex flex-col justify-center gap-y-[103px] px-[70px] py-[76px]">
       <motion.p
         initial="initial"
         animate="animate"
@@ -96,7 +96,7 @@ export const MainPage = () => {
           <h1 className="text-[45px] text-[#ffffff] font-semibold">
             확인이 번거로운
             <br />
-            지원자의 GitHub를
+            개발자의 GitHub를
           </h1>
           <Symbol />
           <h1 className="text-[45px] text-[#ffffff] font-semibold">
@@ -161,6 +161,6 @@ export const MainPage = () => {
           </button>
         </motion.form>
       </section>
-    </div>
+    </article>
   );
 };
