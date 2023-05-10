@@ -1,6 +1,9 @@
-import { useMemo } from "react";
-import { scaleOrdinal } from "d3-scale";
+import React, { useMemo } from "react";
 import { pie, arc } from "d3-shape";
+import { motion } from "framer-motion";
+
+import { useLanguageColor } from "../../hooks/useLanguageColor";
+import { useDomMeasure } from "../../hooks/useDomMeasure";
 
 interface IPieChart {
   data?: {
@@ -12,30 +15,71 @@ interface IPieChart {
 }
 
 export const PieChart = ({ data, width, height }: IPieChart) => {
-  const domain = useMemo(() => {
-    if (data) {
-      return data.map((item) => item.name);
-    }
+  const { bgColor } = useLanguageColor();
 
-    return [];
-  }, [data]);
+  const { ref, measure: domMeasure } = useDomMeasure({
+    mt: 1,
+    mb: -20,
+    ml: 50,
+  });
 
-  const color = scaleOrdinal()
-    .domain(domain)
-    .range(["#F1892D", "#0EAC51", "#0077C0", "#7E349D", "#DA3C78", "#E74C3C"]);
+  const radius = domMeasure
+    ? Math.min(domMeasure?.boundedWidth, domMeasure?.boundedHeight) / 2.4
+    : 100;
 
-  // const pieContainer = pie();
+  const arcGenerator = arc();
 
-  const arcGenerator = arc<string>().innerRadius(0).outerRadius(200);
-  const pieGenerator = pie();
+  const pieGenerator = data
+    ? pie<{ rate: number; name: string }>().value((d) => d.rate)(data)
+    : null;
 
   return (
-    <svg width={width || 500} height={height || 500}>
-      {data && (
-        <g transform="translate(${width / 2}, ${height / 2})">
-          {/* <path d={arcGenerator()}></path> */}
-        </g>
+    <article ref={ref} className="w-full h-full">
+      {domMeasure && (
+        <svg width="100%" height="100%" stroke="transparent">
+          {data && (
+            <g
+              transform={`translate(${domMeasure.boundedWidth / 2}, ${
+                domMeasure.boundedHeight / 2
+              })`}
+            >
+              {pieGenerator &&
+                pieGenerator.map((pie) => {
+                  const midangle =
+                    pie.startAngle + (pie.endAngle - pie.startAngle) / 2;
+                  const textAnchor = midangle < Math.PI ? "start" : "end";
+                  return (
+                    <React.Fragment key={pie.data.name}>
+                      <motion.path
+                        fill={bgColor(pie.data.name).color || "#fff"}
+                        d={
+                          arcGenerator({
+                            innerRadius: radius * 0.6,
+                            outerRadius: radius,
+                            startAngle: pie.startAngle,
+                            endAngle: pie.endAngle,
+                          }) || ""
+                        }
+                      ></motion.path>
+                      <text
+                        fill="#fff"
+                        transform={`translate(${arcGenerator.centroid({
+                          innerRadius: radius,
+                          outerRadius: radius * 1.2,
+                          startAngle: pie.startAngle,
+                          endAngle: pie.endAngle,
+                        })})`}
+                        textAnchor={textAnchor}
+                      >
+                        {pie.data.name}
+                      </text>
+                    </React.Fragment>
+                  );
+                })}
+            </g>
+          )}
+        </svg>
       )}
-    </svg>
+    </article>
   );
 };

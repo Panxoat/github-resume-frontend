@@ -4,6 +4,7 @@ import { AxisLeft, AxisBottom, Orientation } from "@visx/axis";
 import { getStringWidth } from "@visx/text";
 
 import { useDomMeasure } from "../../hooks/useDomMeasure";
+import React from "react";
 
 interface ILineChart {
   index: string[];
@@ -73,9 +74,8 @@ export const LineChart = ({ index, measure }: ILineChart) => {
               const yPos = (dateScale(index[idx]) || 0) + height / 2;
 
               return (
-                <>
+                <React.Fragment key={idx}>
                   <motion.rect
-                    key={idx}
                     stroke="#000"
                     fill={String(color(item))}
                     width={measure}
@@ -99,7 +99,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
                   >
                     {Math.round(item)}
                   </text>
-                </>
+                </React.Fragment>
               );
             })}
           </g>

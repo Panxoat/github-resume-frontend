@@ -20,13 +20,13 @@ import { ReactComponent as LinkIcon } from "../assets/portfolio/project/link.svg
 import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
 import { useInvertColor } from "../hooks/useColor";
-import { getDateAlias } from "../hooks/getDateAlias";
 
 import { Tooltip } from "../components/ui/Tooltip";
 
 import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
+import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData } from "../types/portfolio";
 import { AxiosError } from "axios";
@@ -413,49 +413,55 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
         어떤 언어를 가장 많이 사용할까요?
       </h2>
 
-      <div className="pt-[30px] flex flex-wrap items-center gap-x-[30px] gap-y-[20px]">
-        {data.languages.slice(0, 3).map((language, languageIdx) => (
-          <div
-            key={languageIdx}
-            style={{
-              color: invertColor(bgColor(language.name).color, true),
-              background: `linear-gradient(147.62deg, ${brightenColor(
-                bgColor(language.name).color,
-                10
-              )} 10.96%, ${brightenColor(
-                bgColor(language.name).color,
-                -30
-              )} 74.86%)`,
-            }}
-            className="flex flex-col flex-[1_0_20%] min-h-[231px] rounded-[12px] px-[34px] py-[30px]"
-          >
-            <p className="text-[24px] font-bold">{languageIdx + 1}위</p>
-            <p className="text-[24px] pt-[5px] font-semibold">
-              {language.name}
-            </p>
-            <p className="text-[20px]">{language.rate}%</p>
-          </div>
-        ))}
+      <div className="flex items-center py-[40px]">
+        <div className="w-[700px] h-[400px]">
+          <PieChart data={data.languages.slice(0, 3)} />
+        </div>
 
-        <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
-          {data.languages.slice(4).map((language, languageIdx) => (
+        {/* <div className="pt-[30px] flex flex-col items-center gap-x-[30px] gap-y-[20px]">
+          {data.languages.slice(0, 3).map((language, languageIdx) => (
             <div
               key={languageIdx}
               style={{
                 color: invertColor(bgColor(language.name).color, true),
+                background: `linear-gradient(147.62deg, ${brightenColor(
+                  bgColor(language.name).color,
+                  10
+                )} 10.96%, ${brightenColor(
+                  bgColor(language.name).color,
+                  -30
+                )} 74.86%)`,
               }}
-              className="flex items-center tablet:justify-center gap-x-[10px] text-[16px] font-bold"
+              className="flex flex-col flex-[1_0_20%] min-h-[231px] rounded-[12px] px-[34px] py-[30px]"
             >
-              <span>{languageIdx + 4}위</span>
-              <div className="flex tablet:flex-row tablet:items-center pc:flex-col gap-x-[5px]">
-                <span>{language.name}</span>
-                <span className="text-[12px] font-medium">
-                  {language.rate}%
-                </span>
-              </div>
+              <p className="text-[24px] font-bold">{languageIdx + 1}위</p>
+              <p className="text-[24px] pt-[5px] font-semibold">
+                {language.name}
+              </p>
+              <p className="text-[20px]">{language.rate}%</p>
             </div>
           ))}
-        </div>
+
+          <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
+            {data.languages.slice(4).map((language, languageIdx) => (
+              <div
+                key={languageIdx}
+                style={{
+                  color: invertColor(bgColor(language.name).color, true),
+                }}
+                className="flex items-center tablet:justify-center gap-x-[10px] text-[16px] font-bold"
+              >
+                <span>{languageIdx + 4}위</span>
+                <div className="flex tablet:flex-row tablet:items-center pc:flex-col gap-x-[5px]">
+                  <span>{language.name}</span>
+                  <span className="text-[12px] font-medium">
+                    {language.rate}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div> */}
       </div>
     </section>
   );
@@ -484,7 +490,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
   const dotStyle = "w-[19px] h-[19px] rounded-full bg-[#ffffff]";
 
   return (
-    <section className="flex flex-col gap-y-[30px] pt-[160px]">
+    <section className="flex flex-col gap-y-[30px] pt-[100px]">
       <div className="flex w-full justify-between rounded-[12px] bg-[#12BD8B]">
         <div className="flex flex-col justify-between pl-[20px] py-[20px]">
           <div
