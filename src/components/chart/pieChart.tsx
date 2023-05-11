@@ -48,10 +48,28 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   const midangle =
                     pie.startAngle + (pie.endAngle - pie.startAngle) / 2;
                   const textAnchor = midangle < Math.PI ? "start" : "end";
+
+                  const path = {
+                    start: {
+                      pathLength: 0,
+                      fill: "transparent",
+                      y: 20,
+                      opacity: 0,
+                    },
+                    end: {
+                      y: 0,
+                      opacity: 1,
+                      pathLength: 1,
+                      fill: bgColor(pie.data.name).color || "#fff",
+                    },
+                  };
+
                   return (
                     <React.Fragment key={pie.data.name}>
                       <motion.path
-                        fill={bgColor(pie.data.name).color || "#fff"}
+                        variants={path}
+                        initial="start"
+                        animate="end"
                         d={
                           arcGenerator({
                             innerRadius: radius * 0.6,
@@ -62,7 +80,8 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         }
                       ></motion.path>
                       <text
-                        fill="#fff"
+                        fontWeight={600}
+                        fill={bgColor(pie.data.name).color || "#fff"}
                         transform={`translate(${arcGenerator.centroid({
                           innerRadius: radius,
                           outerRadius: radius * 1.2,

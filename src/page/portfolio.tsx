@@ -30,8 +30,26 @@ import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData } from "../types/portfolio";
 import { AxiosError } from "axios";
+import clsx from "clsx";
+
+const screenVariants = {
+  offscreen: {
+    y: 50,
+    opacity: 0,
+  },
+  onscreen: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      bounce: 0.4,
+      duration: 2,
+    },
+  },
+};
 
 const boxVariants = {
+  ...screenVariants,
   hover: {
     boxShadow: "0px 0px 15px 5px #6AD77C80",
     scale: 1.002,
@@ -106,15 +124,33 @@ export const Portfolio = () => {
             <article ref={overviewRef}>
               <Portfolio.OverView data={data} />
             </article>
-            <article>
+            <motion.article
+              variants={screenVariants}
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true, amount: 0.8 }}
+              ref={shareRef}
+            >
               <Portfolio.Summary data={data} />
-            </article>
-            <article ref={shareRef}>
+            </motion.article>
+            <motion.article
+              variants={screenVariants}
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true, amount: 0.8 }}
+              ref={shareRef}
+            >
               <Portfolio.Share data={data} />
-            </article>
-            <article ref={projectRef}>
+            </motion.article>
+            <motion.article
+              variants={screenVariants}
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true, amount: 0.4 }}
+              ref={projectRef}
+            >
               <Portfolio.Project data={data} />
-            </article>
+            </motion.article>
           </div>
         </article>
       )}
@@ -301,8 +337,9 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
     <section className="cursor-pointer w-full">
       <motion.div
         variants={boxVariants}
-        initial="start"
-        animate="end"
+        initial="offscreen"
+        whileInView="onscreen"
+        viewport={{ once: true, amount: 0.3 }}
         whileHover="hover"
         className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between rounded-[12px] bg-[#1A1B24]"
       >
@@ -413,12 +450,12 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
         어떤 언어를 가장 많이 사용할까요?
       </h2>
 
-      <div className="flex items-center py-[40px]">
-        <div className="w-[700px] h-[400px]">
-          <PieChart data={data.languages.slice(0, 3)} />
+      <div className="w-full h-[440px] flex items-center gap-x-[14px] my-[40px]">
+        <div className="w-[70%] h-full py-[30px] bg-[#1A1B24] rounded-[12px]">
+          <PieChart data={data.languages.slice(0, 5)} />
         </div>
 
-        {/* <div className="pt-[30px] flex flex-col items-center gap-x-[30px] gap-y-[20px]">
+        <div className="w-[30%] h-full flex flex-col items-center gap-x-[30px] gap-y-[10px]">
           {data.languages.slice(0, 3).map((language, languageIdx) => (
             <div
               key={languageIdx}
@@ -432,17 +469,28 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                   -30
                 )} 74.86%)`,
               }}
-              className="flex flex-col flex-[1_0_20%] min-h-[231px] rounded-[12px] px-[34px] py-[30px]"
+              className={clsx(
+                "w-full h-[25%] flex flex-col p-[22px] rounded-[12px]",
+                {
+                  "h-[50%]": languageIdx === 0,
+                }
+              )}
             >
               <p className="text-[24px] font-bold">{languageIdx + 1}위</p>
-              <p className="text-[24px] pt-[5px] font-semibold">
+              <p
+                className={clsx("text-[20px] pt-[5px] font-semibold", {
+                  "text-[24px]": languageIdx === 0,
+                })}
+              >
                 {language.name}
               </p>
-              <p className="text-[20px]">{language.rate}%</p>
+              {languageIdx === 0 && (
+                <p className="text-[20px]">{language.rate}%</p>
+              )}
             </div>
           ))}
 
-          <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
+          {/* <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
             {data.languages.slice(4).map((language, languageIdx) => (
               <div
                 key={languageIdx}
@@ -460,8 +508,8 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                 </div>
               </div>
             ))}
-          </div>
-        </div> */}
+          </div> */}
+        </div>
       </div>
     </section>
   );

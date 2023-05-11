@@ -8,6 +8,19 @@ interface ISummaryBox {
 }
 
 const boxVariants = {
+  offscreen: {
+    y: 50,
+    opacity: 0,
+  },
+  onscreen: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      bounce: 0.4,
+      duration: 2,
+    },
+  },
   hover: {
     boxShadow: "0px 0px 10px 5px #6AD77C80",
     scale: 1.002,
@@ -23,8 +36,9 @@ const SummaryBox = ({ children, className }: ISummaryBox) => {
   return (
     <motion.div
       variants={boxVariants}
-      initial="start"
-      animate="end"
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ once: true, amount: 0.3 }}
       whileHover="hover"
       className={twMerge(
         "cursor-pointer flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[30px]",
