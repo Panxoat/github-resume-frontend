@@ -38,6 +38,18 @@ export const MainPage = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [id, setId] = useState("");
 
+  const handleResize = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -74,7 +86,12 @@ export const MainPage = () => {
   }, [error]);
 
   return (
-    <article className="w-full max-w-[1440px] mx-auto h-screen flex flex-col justify-center gap-y-[103px] px-[70px] py-[76px]">
+    <article
+      style={{
+        height: "calc(var(--vh, 1vh) * 100)",
+      }}
+      className="w-full max-w-[1440px] mx-auto flex flex-col justify-center gap-y-[40px] tablet:gap-y-[100px] px-[30px] tablet:px-[70px] overflow-hidden"
+    >
       <motion.p
         initial="initial"
         animate="animate"
@@ -85,7 +102,7 @@ export const MainPage = () => {
         Github Resume
       </motion.p>
 
-      <section className="flex tablet:flex-col desktop:flex-row tablet:gap-y-[100px] desktop:items-center justify-between">
+      <section className="flex flex-col desktop:flex-row gap-y-[30px] tablet:gap-y-[100px] desktop:items-center justify-between">
         <motion.div
           initial="initial"
           animate="animate"
@@ -93,13 +110,13 @@ export const MainPage = () => {
           transition={{ duration: 0.8, repeat: 0 }}
           className="flex flex-col gap-y-[30px]"
         >
-          <h1 className="text-[45px] text-[#ffffff] font-semibold">
+          <h1 className="text-[32px] tablet:text-[45px] text-[#ffffff] font-semibold">
             확인이 번거로운
             <br />
             개발자의 GitHub를
           </h1>
-          <Symbol />
-          <h1 className="text-[45px] text-[#ffffff] font-semibold">
+          <Symbol className="w-full h-full tablet:w-fit" />
+          <h1 className="text-[32px] tablet:text-[45px] text-[#ffffff] font-semibold">
             간편 요약으로
             <br />한 눈에 확인.
           </h1>
@@ -120,6 +137,8 @@ export const MainPage = () => {
           style={{ boxShadow: "0px 4px 10px 0px #00000040 inset" }}
           className="flex justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]"
           onSubmit={(e) => {
+            inputRef.current?.blur();
+            window.scrollTo({ left: 0, top: 0 });
             e.preventDefault();
             mutate(id);
           }}

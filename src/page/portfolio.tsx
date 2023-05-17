@@ -104,8 +104,8 @@ export const Portfolio = () => {
       {!data && <PortfolioSkeleton />}
 
       {data && (
-        <article className="w-full h-screen flex gap-x-[20px] tablet:gap-x-[40px] px-[40px] py-[50px]">
-          <aside className="p-3 w-[20%] hidden tablet:block">
+        <article className="w-full h-screen flex gap-x-[20px] px-[10px] pt-[20px] pb-[40px] tablet:gap-x-[20px] tablet:px-[30px] tablet:py-[40px] desktop:gap-x-[40px] desktop:px-[40px] desktop:py-[50px]">
+          <aside className="w-[20%] hidden tablet:block">
             <Portfolio.Aside
               data={data}
               scrollRef={{
@@ -119,11 +119,11 @@ export const Portfolio = () => {
 
           <div
             ref={scrollTargetRef}
-            className="overflow-auto p-3 w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
+            className="overflow-auto w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
           >
-            <article ref={overviewRef}>
+            {/* <article ref={overviewRef}>
               <Portfolio.OverView data={data} />
-            </article>
+            </article> */}
             <motion.article
               variants={screenVariants}
               initial="offscreen"
@@ -198,7 +198,7 @@ Portfolio.Aside = ({
                 alt="profileImage"
               />
             </div>
-            <p className="cursor-pointer text-[28px] font-bold">
+            <p className="cursor-pointer tablet:text-[24px] dekstop:text-[28px] font-bold">
               <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
                 {data.user.name}
               </span>
@@ -259,7 +259,7 @@ Portfolio.Aside = ({
             <CommitIcon />
           </div>
           <span
-            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
                 top: overview.current?.clientTop,
@@ -276,7 +276,7 @@ Portfolio.Aside = ({
             <LanguageIcon />
           </div>
           <span
-            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
                 top: share.current?.clientHeight,
@@ -293,7 +293,7 @@ Portfolio.Aside = ({
             <ProjectIcon />
           </div>
           <span
-            className="cursor-pointer text-[#9DA2B9] text-[16px] font-bold hover:underline"
+            className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
                 top: project.current?.clientHeight,
@@ -341,9 +341,9 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
         whileInView="onscreen"
         viewport={{ once: true, amount: 0.3 }}
         whileHover="hover"
-        className="flex flex-col tablet:flex-row justify-center items-center tablet:justify-between rounded-[12px] bg-[#1A1B24]"
+        className="flex flex-col tablet:flex-row justify-center items-center p-[40px] tablet:p-0 tablet:justify-between rounded-[12px] bg-[#1A1B24]"
       >
-        <div className="w-full tablet:w-[40%] flex flex-col py-[40px] pl-[40px]">
+        <div className="w-full tablet:w-[40%] flex flex-col tablet:py-[40px] tablet:pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
             {data.user.name}님의
             <br /> 최근 {data.contributions.recentMonthRange}개월 커밋 횟수
@@ -365,7 +365,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
             </Tooltip>
           </p>
         </div>
-        <div className="w-full h-[200px] tablet:w-[60%] pr-[40px]">
+        <div className="w-full h-[200px] tablet:w-[60%] tablet:pl-[0px] tablet:pr-[40px]">
           <LineChart index={timeIndex} measure={measure} />
         </div>
       </motion.div>
@@ -393,7 +393,8 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
   }, [data]);
 
   return (
-    <section className="flex flex-wrap gap-y-[32px] gap-x-[30px]">
+    <section className="flex flex-wrap gap-[15px] tablet:gap-y-[32px] tablet:gap-x-[30px]">
+      <Portfolio.OverView data={data} />
       <SummaryBox>
         <SummaryBox.Title>
           {data.contributions.year}년 총 커밋 횟수
@@ -440,22 +441,22 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
   const { invertColor, brightenColor } = useInvertColor();
 
   return (
-    <section className="mobile:pt-[66px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col">
-      <h1 className="mobile:text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
-        🌐
+    <section className="pt-[20px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col">
+      <h1 className="text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
+        <span className="text-[40px] tablet:text-[22px]">🌐</span>
         <br />
         언어 별 점유율
       </h1>
-      <h2 className="w-full text-center text-[20px] text-[#9DA2B9] pt-[14px]">
+      <h2 className="w-full text-center text-[20px] text-[#9DA2B9] pt-[7px] tablet:pt-[14px]">
         어떤 언어를 가장 많이 사용할까요?
       </h2>
 
-      <div className="w-full h-[440px] flex items-center gap-x-[14px] my-[40px]">
-        <div className="w-[70%] h-full py-[30px] bg-[#1A1B24] rounded-[12px]">
+      <div className="w-full h-[500px] flex flex-col tablet:flex-row items-center gap-[14px] my-[80px]">
+        <div className="w-full tablet:w-[70%] h-[250px] tablet:h-full py-[10px] tablet:py-[30px] bg-[#1A1B24] rounded-[12px]">
           <PieChart data={data.languages.slice(0, 5)} />
         </div>
 
-        <div className="w-[30%] h-full flex flex-col items-center gap-x-[30px] gap-y-[10px]">
+        <div className="w-full tablet:w-[30%] h-full flex flex-col items-center gap-x-[30px] gap-y-[10px]">
           {data.languages.slice(0, 3).map((language, languageIdx) => (
             <div
               key={languageIdx}
@@ -470,17 +471,22 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                 )} 74.86%)`,
               }}
               className={clsx(
-                "w-full h-[25%] flex flex-col p-[22px] rounded-[12px]",
+                "w-full h-[30%] tablet:h-[25%] flex flex-col p-[22px] rounded-[12px]",
                 {
-                  "h-[50%]": languageIdx === 0,
+                  "tablet:h-[50%]": languageIdx === 0,
                 }
               )}
             >
-              <p className="text-[24px] font-bold">{languageIdx + 1}위</p>
+              <p className="text-[20px] tablet:text-[24px] font-bold">
+                {languageIdx + 1}위
+              </p>
               <p
-                className={clsx("text-[20px] pt-[5px] font-semibold", {
-                  "text-[24px]": languageIdx === 0,
-                })}
+                className={clsx(
+                  "truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold",
+                  {
+                    "text-[20px] tablet:text-[24x]": languageIdx === 0,
+                  }
+                )}
               >
                 {language.name}
               </p>
@@ -538,8 +544,8 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
   const dotStyle = "w-[19px] h-[19px] rounded-full bg-[#ffffff]";
 
   return (
-    <section className="flex flex-col gap-y-[30px] pt-[100px]">
-      <div className="flex w-full justify-between rounded-[12px] bg-[#12BD8B]">
+    <section className="flex flex-col gap-y-[30px] pt-[20px] tablet:pt-[100px]">
+      <div className="flex w-full gap-x-[20px] justify-between rounded-[12px] bg-[#12BD8B]">
         <div className="flex flex-col justify-between pl-[20px] py-[20px]">
           <div
             style={{ boxShadow: "0px 4px 4px 2px #00000026" }}
@@ -550,17 +556,17 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
             className={dotStyle}
           />
         </div>
-        <div className="w-full flex items-center justify-between px-[51px]">
+        <div className="w-full flex items-center justify-between">
           <div className="flex flex-col py-[30px]">
-            <h1 className="text-[48px] text-[#ffffff] font-bold leading-[57px]">
+            <h1 className="text-[24px] tablet:text-[36px] desktop:text-[48px] text-[#ffffff] font-bold leading-[57px]">
               주요 프로젝트
-              <br /> 모음집.zip
+              <br className="hidden tablet:flex" /> 모음집.zip
             </h1>
             <p className="text-[20px] text-[#ffffff] font-extralight pt-[16px]">
               평가에 도움될만한 레포를 모아봤어요!
             </p>
           </div>
-          <ProjectBanner />
+          <ProjectBanner className="hidden tablet:flex" />
         </div>
         <div className="flex flex-col justify-between pr-[20px] py-[20px]">
           <div
@@ -575,17 +581,17 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
       </div>
 
       <ul
-        className=" max-w-2xl gap-6 grid grid-cols-1 tablet:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 mobile:gap-8"
+        className="max-w-2xl grid grid-cols-1 desktop:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 gap-8"
         role="list"
       >
         {customRepositoriesData(2, data.repositories).map(
           (repositories, repositoriesIdx) => (
             <li key={repositoriesIdx}>
-              <ul className="flex flex-col gap-y-6 mobile:gap-y-8">
+              <ul className="flex flex-col gap-y-6 tablet:gap-y-8">
                 {repositories.map((repositorie, repositorieIdx) => (
                   <li
                     key={repositorieIdx}
-                    className="group rounded-[12px] overflow-hidden"
+                    className="group rounded-[12px] overflow-hidden isolate"
                   >
                     <div
                       style={{

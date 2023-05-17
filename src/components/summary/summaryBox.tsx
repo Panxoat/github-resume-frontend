@@ -41,7 +41,7 @@ const SummaryBox = ({ children, className }: ISummaryBox) => {
       viewport={{ once: true, amount: 0.3 }}
       whileHover="hover"
       className={twMerge(
-        "cursor-pointer flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[30px]",
+        "cursor-pointer flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[15px] tablet:px-[30px]",
         className
       )}
     >
@@ -53,7 +53,10 @@ const SummaryBox = ({ children, className }: ISummaryBox) => {
 SummaryBox.Title = ({ children, className }: ISummaryBox) => {
   return (
     <h3
-      className={twMerge("text-[#ffffff] text-[15px] font-medium", className)}
+      className={twMerge(
+        "text-[#ffffff] text-[12px] tablet:text-[15px] font-medium",
+        className
+      )}
     >
       {children}
     </h3>
