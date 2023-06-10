@@ -136,7 +136,7 @@ export const Portfolio = () => {
               variants={screenVariants}
               initial="offscreen"
               whileInView="onscreen"
-              viewport={{ once: true, amount: 0.8 }}
+              viewport={{ once: true, amount: 0.45 }}
               ref={shareRef}
             >
               <Portfolio.Share data={data} />
@@ -145,7 +145,7 @@ export const Portfolio = () => {
               variants={screenVariants}
               initial="offscreen"
               whileInView="onscreen"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: true, amount: 0.1 }}
               ref={projectRef}
             >
               <Portfolio.Project data={data} />
@@ -439,6 +439,8 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
   const { bgColor } = useLanguageColor();
   const { invertColor, brightenColor } = useInvertColor();
 
+  const [first, second, third] = data.languages.slice(0, 3);
+
   return (
     <section className="pt-[20px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col">
       <h1 className="text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
@@ -450,70 +452,57 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
         어떤 언어를 가장 많이 사용할까요?
       </h2>
 
-      <div className="w-full h-[500px] flex flex-col tablet:flex-row items-center gap-[14px] my-[80px]">
-        <div className="w-full tablet:w-[70%] h-[250px] tablet:h-full py-[10px] tablet:py-[30px] bg-[#1A1B24] rounded-[12px]">
+      <div className="w-full h-[600px] desktop:h-[500px] flex flex-col desktop:flex-row items-center gap-[14px] my-[80px]">
+        <div className="w-full h-[60%] desktop:w-[70%] desktop:h-full py-[10px] dekstop:py-[30px] bg-[#1A1B24] rounded-[12px]">
           <PieChart data={data.languages.slice(0, 5)} />
         </div>
 
-        <div className="w-full tablet:w-[30%] h-full flex flex-col items-center gap-x-[30px] gap-y-[10px]">
-          {data.languages.slice(0, 3).map((language, languageIdx) => (
-            <div
-              key={languageIdx}
-              style={{
-                color: invertColor(bgColor(language.name).color, true),
-                background: `linear-gradient(147.62deg, ${brightenColor(
-                  bgColor(language.name).color,
-                  10
-                )} 10.96%, ${brightenColor(
-                  bgColor(language.name).color,
-                  -30
-                )} 74.86%)`,
-              }}
-              className={clsx(
-                "w-full h-[30%] tablet:h-[25%] flex flex-col p-[22px] rounded-[12px]",
-                {
-                  "tablet:h-[50%]": languageIdx === 0,
-                }
-              )}
-            >
-              <p className="text-[20px] tablet:text-[24px] font-bold">
-                {languageIdx + 1}위
-              </p>
-              <p
-                className={clsx(
-                  "truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold",
-                  {
-                    "text-[20px] tablet:text-[24x]": languageIdx === 0,
-                  }
-                )}
-              >
-                {language.name}
-              </p>
-              {languageIdx === 0 && (
-                <p className="text-[20px]">{language.rate}%</p>
-              )}
-            </div>
-          ))}
+        <div className="w-full h-[30%] desktop:w-[30%] desktop:h-full flex flex-row desktop:flex-col items-center gap-x-[14px] gap-y-[10px]">
+          <div
+            style={{
+              color: invertColor(bgColor(first.name).color, true),
+              background: `linear-gradient(147.62deg, ${brightenColor(
+                bgColor(first.name).color,
+                10
+              )} 10.96%, ${brightenColor(
+                bgColor(first.name).color,
+                -30
+              )} 74.86%)`,
+            }}
+            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+          >
+            <p className="text-[20px] tablet:text-[24px] font-bold">1위</p>
+            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+              {first.name}
+            </p>
+            <p className="text-[20px]">{first.rate}%</p>
+          </div>
 
-          {/* <div className="flex flex-col flex-[1_0_20%] min-h-[231px] max-h-[231px] overflow-auto rounded-[12px] gap-y-[18px] px-[34px] py-[30px] bg-[#1A1B24]">
-            {data.languages.slice(4).map((language, languageIdx) => (
+          <div className="w-full h-full flex flex-col gap-y-[10px]">
+            {[second, third].map((language, languageIdx) => (
               <div
                 key={languageIdx}
                 style={{
                   color: invertColor(bgColor(language.name).color, true),
+                  background: `linear-gradient(147.62deg, ${brightenColor(
+                    bgColor(language.name).color,
+                    10
+                  )} 10.96%, ${brightenColor(
+                    bgColor(language.name).color,
+                    -30
+                  )} 74.86%)`,
                 }}
-                className="flex items-center tablet:justify-center gap-x-[10px] text-[16px] font-bold"
+                className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
               >
-                <span>{languageIdx + 4}위</span>
-                <div className="flex tablet:flex-row tablet:items-center pc:flex-col gap-x-[5px]">
-                  <span>{language.name}</span>
-                  <span className="text-[12px] font-medium">
-                    {language.rate}%
-                  </span>
-                </div>
+                <p className="text-[20px] tablet:text-[24px] font-bold">
+                  {languageIdx + 2}위
+                </p>
+                <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
+                  {language.name}
+                </p>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
     </section>
@@ -561,7 +550,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
               주요 프로젝트
               <br className="hidden tablet:flex" /> 모음집.zip
             </h1>
-            <p className="text-[20px] text-[#ffffff] font-extralight pt-[16px]">
+            <p className="text-[18px] tablet:text-[20px] text-[#ffffff] font-extralight pt-[16px]">
               평가에 도움될만한 레포를 모아봤어요!
             </p>
           </div>

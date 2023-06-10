@@ -19,16 +19,16 @@ interface IPieChart {
 
 export const PieChart = ({ data, width, height }: IPieChart) => {
   const { bgColor } = useLanguageColor();
-  const { invertColor, brightenColor } = useInvertColor();
+  const { invertColor } = useInvertColor();
 
   const { ref, measure: domMeasure } = useDomMeasure({
     mt: 1,
     mb: -20,
-    ml: 50,
+    ml: 0,
   });
 
   const innerRadius = domMeasure
-    ? Math.min(domMeasure?.boundedWidth, domMeasure?.boundedHeight) / 2.2
+    ? Math.min(domMeasure?.boundedWidth, domMeasure?.boundedHeight) / 2.3
     : 100;
 
   const outerRadius = domMeasure
@@ -132,7 +132,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         ></polyline>
                       )}
                       <text
-                        fontSize={15}
+                        className="text-[10px] tablet:text-[11px] desktop:text-[16px]"
                         fontWeight={600}
                         fill={
                           isSmallArc
