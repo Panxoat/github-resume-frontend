@@ -29,9 +29,9 @@ export const Tooltip = ({
       )}
     >
       {children}
-      <span className={twMerge("tooltiptext text-[15px]", textClassName)}>
+      <div className={twMerge("tooltiptext text-[15px]", textClassName)}>
         {title}
-      </span>
+      </div>
     </div>
   );
 };

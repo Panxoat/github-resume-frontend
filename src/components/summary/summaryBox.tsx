@@ -22,7 +22,6 @@ const boxVariants = {
     },
   },
   hover: {
-    boxShadow: "0px 0px 10px 5px #6AD77C80",
     scale: 1.002,
     transition: {
       duration: 0.3,
@@ -41,7 +40,7 @@ const SummaryBox = ({ children, className }: ISummaryBox) => {
       viewport={{ once: true, amount: 0.3 }}
       whileHover="hover"
       className={twMerge(
-        "cursor-pointer flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[15px] tablet:px-[30px]",
+        "flex-[1_0_20%] h-[113px] flex flex-col gap-y-[10px] justify-center rounded-[12px] bg-[#1A1B24] px-[15px] tablet:px-[30px]",
         className
       )}
     >

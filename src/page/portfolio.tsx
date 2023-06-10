@@ -51,7 +51,6 @@ const screenVariants = {
 const boxVariants = {
   ...screenVariants,
   hover: {
-    boxShadow: "0px 0px 15px 5px #6AD77C80",
     scale: 1.002,
     transition: {
       duration: 0.3,
@@ -334,7 +333,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
   const accMeasure = measure.reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <section className="cursor-pointer w-full">
+    <section className="  w-full">
       <motion.div
         variants={boxVariants}
         initial="offscreen"
@@ -544,7 +543,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
   const dotStyle = "w-[19px] h-[19px] rounded-full bg-[#ffffff]";
 
   return (
-    <section className="flex flex-col gap-y-[30px] pt-[20px] tablet:pt-[100px]">
+    <section className="flex flex-col gap-y-[30px] pt-[20px] pb-[50px] tablet:pt-[100px]">
       <div className="flex w-full gap-x-[20px] justify-between rounded-[12px] bg-[#12BD8B]">
         <div className="flex flex-col justify-between pl-[20px] py-[20px]">
           <div
@@ -643,16 +642,19 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-x-[5px] gap-y-[8px]">
-                        {repositorie.topics.map((topic, topicIdx) => (
-                          <div
-                            key={topicIdx}
-                            className="flex items-center justify-center px-[13px] py-[3px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
-                          >
-                            # {topic}
-                          </div>
-                        ))}
-                      </div>
+                      {repositorie.topics.length > 0 && (
+                        <div className="flex flex-wrap gap-x-[5px] gap-y-[8px]">
+                          {repositorie.topics.map((topic, topicIdx) => (
+                            <div
+                              key={topicIdx}
+                              className="flex items-center justify-center px-[13px] py-[3px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                            >
+                              # {topic}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       {repositorie.homepageUrl && (
                         <div
                           style={{ transition: "all 0.3s" }}
