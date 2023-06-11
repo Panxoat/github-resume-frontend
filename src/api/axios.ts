@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.DEV ? "localhost:3000" : import.meta.env.BASE_URL,
+  baseURL: import.meta.env.DEV
+    ? "localhost:3000"
+    : import.meta.env.PROD_BASE_URL,
 });
 
 axios.interceptors.request.use(
