@@ -261,7 +261,7 @@ Portfolio.Aside = ({
             className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
-                top: overview.current?.clientTop,
+                top: 0,
                 left: 0,
                 behavior: "smooth",
               });
@@ -278,7 +278,7 @@ Portfolio.Aside = ({
             className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
-                top: share.current?.clientHeight,
+                top: share.current?.offsetTop,
                 left: 0,
                 behavior: "smooth",
               });
@@ -295,7 +295,7 @@ Portfolio.Aside = ({
             className="cursor-pointer text-[#9DA2B9] tablet:text-[13px] dekstop:text-[16px] font-bold hover:underline"
             onClick={() => {
               scrollTarget.current?.scroll({
-                top: project.current?.clientHeight,
+                top: project.current?.offsetTop,
                 left: 0,
                 behavior: "smooth",
               });
@@ -458,51 +458,55 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
         </div>
 
         <div className="w-full h-[30%] desktop:w-[30%] desktop:h-full flex flex-row desktop:flex-col items-center gap-x-[14px] gap-y-[10px]">
-          <div
-            style={{
-              color: invertColor(bgColor(first.name).color, true),
-              background: `linear-gradient(147.62deg, ${brightenColor(
-                bgColor(first.name).color,
-                10
-              )} 10.96%, ${brightenColor(
-                bgColor(first.name).color,
-                -30
-              )} 74.86%)`,
-            }}
-            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
-          >
-            <p className="text-[20px] tablet:text-[24px] font-bold">1위</p>
-            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
-              {first.name}
-            </p>
-            <p className="text-[20px]">{first.rate}%</p>
-          </div>
-
-          <div className="w-full h-full flex flex-col gap-y-[10px]">
-            {[second, third].map((language, languageIdx) => (
+          {first && (
+            <>
               <div
-                key={languageIdx}
                 style={{
-                  color: invertColor(bgColor(language.name).color, true),
+                  color: invertColor(bgColor(first.name).color, true),
                   background: `linear-gradient(147.62deg, ${brightenColor(
-                    bgColor(language.name).color,
+                    bgColor(first.name).color,
                     10
                   )} 10.96%, ${brightenColor(
-                    bgColor(language.name).color,
+                    bgColor(first.name).color,
                     -30
                   )} 74.86%)`,
                 }}
-                className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
               >
-                <p className="text-[20px] tablet:text-[24px] font-bold">
-                  {languageIdx + 2}위
+                <p className="text-[20px] tablet:text-[24px] font-bold">1위</p>
+                <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                  {first.name}
                 </p>
-                <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
-                  {language.name}
-                </p>
+                <p className="text-[20px]">{first.rate}%</p>
               </div>
-            ))}
-          </div>
+
+              <div className="w-full h-full flex flex-col gap-y-[10px]">
+                {[second || [], third || []].map((language, languageIdx) => (
+                  <div
+                    key={languageIdx}
+                    style={{
+                      color: invertColor(bgColor(language?.name)?.color, true),
+                      background: `linear-gradient(147.62deg, ${brightenColor(
+                        bgColor(language?.name)?.color,
+                        10
+                      )} 10.96%, ${brightenColor(
+                        bgColor(language?.name)?.color,
+                        -30
+                      )} 74.86%)`,
+                    }}
+                    className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                  >
+                    <p className="text-[20px] tablet:text-[24px] font-bold">
+                      {languageIdx + 2}위
+                    </p>
+                    <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
+                      {language?.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

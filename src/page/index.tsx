@@ -152,7 +152,7 @@ export const MainPage = () => {
                 if (notFoundUser) {
                   reset();
                 }
-                setId(e.target.value);
+                setId(e.target.value.trim());
               }}
               type="text"
               placeholder="GitHub ID 입력"
@@ -163,6 +163,7 @@ export const MainPage = () => {
           </div>
           <button
             type="submit"
+            disabled={!id}
             className={clsx(
               "flex flex-shrink-0 items-center justify-center w-[31px] h-[31px] rounded-full bg-[#393D50]",
               {
