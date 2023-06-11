@@ -78,11 +78,13 @@ export const Portfolio = () => {
       onSuccess: (data) => {
         return {
           ...data,
-          languages: data.languages.sort((a, b) => {
-            if (a.rate > b.rate) return -1;
-            if (a.rate < b.rate) return 1;
-            return 1;
-          }),
+          languages: data.languages
+            ? data.languages.sort((a, b) => {
+                if (a.rate > b.rate) return -1;
+                if (a.rate < b.rate) return 1;
+                return 1;
+              })
+            : [],
         };
       },
       onError: (error) => {

@@ -1,9 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.DEV
-    ? "localhost:3000"
-    : import.meta.env.PROD_BASE_URL,
+  baseURL: "https://github-resume.api.consistent.kr",
 });
 
 axios.interceptors.request.use(
