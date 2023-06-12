@@ -28,9 +28,8 @@ import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
 import { PieChart } from "../components/chart/pieChart";
 
-import type { IUserData } from "../types/portfolio";
+import type { IUserData, ILanguages, IRepositories } from "../types/portfolio";
 import { AxiosError } from "axios";
-import clsx from "clsx";
 
 const screenVariants = {
   offscreen: {
@@ -78,13 +77,14 @@ export const Portfolio = () => {
       onSuccess: (data) => {
         return {
           ...data,
-          languages: data.languages
-            ? data.languages.sort((a, b) => {
-                if (a.rate > b.rate) return -1;
-                if (a.rate < b.rate) return 1;
-                return 1;
-              })
-            : [],
+          languages:
+            data.languages.length > 0
+              ? (data.languages as ILanguages[]).sort((a, b) => {
+                  if (a.rate > b.rate) return -1;
+                  if (a.rate < b.rate) return 1;
+                  return 1;
+                })
+              : [],
         };
       },
       onError: (error) => {
@@ -188,7 +188,7 @@ Portfolio.Aside = ({
             title={
               <div className="flex items-center gap-x-[5px] px-[4px] py-[5px] text-[15px] text-[#D9D9D9] font-medium">
                 <GithubLogo className="[&>path]:fill-[#D9D9D9]" />
-                <span>Github로 이동</span>
+                <span>GitHub로 이동</span>
               </div>
             }
           >
@@ -376,21 +376,23 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
 
 Portfolio.Summary = ({ data }: { data: IUserData }) => {
   const mostUsageLanguage = useMemo(() => {
-    return data.languages.reduce(
-      (acc, curr) => {
-        if (acc.rate < curr.rate) {
-          acc = {
-            rate: curr.rate,
-            name: curr.name,
-          };
+    if (data.languages.length > 0) {
+      return (data.languages as ILanguages[]).reduce(
+        (acc, curr) => {
+          if (acc.rate < curr.rate) {
+            acc = {
+              rate: curr.rate,
+              name: curr.name,
+            };
+          }
+          return acc;
+        },
+        {
+          rate: 0,
+          name: "",
         }
-        return acc;
-      },
-      {
-        rate: 0,
-        name: "",
-      }
-    );
+      );
+    }
   }, [data]);
 
   return (
@@ -422,7 +424,7 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
         <SummaryBox.Title>최다 사용 언어</SummaryBox.Title>
         <SummaryBox.Content>
           <span className="text-[#F7DF1E] text-[24px] font-bold">
-            {mostUsageLanguage.name}
+            {mostUsageLanguage ? mostUsageLanguage.name : "없음"}
           </span>
         </SummaryBox.Content>
       </SummaryBox>
@@ -430,7 +432,9 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
       <SummaryBox>
         <SummaryBox.Title>최근 커밋 레포</SummaryBox.Title>
         <SummaryBox.Content className="text-[#F7DF1E] text-[24px] font-bold  max-w-full truncate">
-          {data.contributions.latestCommittedRepository.name}
+          {data.contributions.latestCommittedRepository
+            ? data.contributions.latestCommittedRepository.name
+            : "없음"}
         </SummaryBox.Content>
       </SummaryBox>
     </section>
@@ -552,11 +556,14 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
         </div>
         <div className="w-full flex items-center justify-between">
           <div className="flex flex-col py-[30px]">
-            <h1 className="text-[24px] tablet:text-[36px] desktop:text-[48px] text-[#ffffff] font-bold leading-[57px]">
+            <h1 className="text-[20px] tablet:text-[36px] desktop:text-[48px] text-[#ffffff] font-bold leading-[57px]">
               주요 프로젝트
               <br className="hidden tablet:flex" /> 모음집.zip
             </h1>
-            <p className="text-[18px] tablet:text-[20px] text-[#ffffff] font-extralight pt-[16px]">
+            <p
+              style={{ wordBreak: "keep-all", whiteSpace: "break-spaces" }}
+              className="text-[18px] tablet:text-[20px] text-[#ffffff] font-extralight pt-[16px]"
+            >
               평가에 도움될만한 레포를 모아봤어요!
             </p>
           </div>
@@ -573,107 +580,113 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
           />
         </div>
       </div>
-
-      <ul
-        className="max-w-2xl grid grid-cols-1 desktop:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 gap-8"
-        role="list"
-      >
-        {customRepositoriesData(2, data.repositories).map(
-          (repositories, repositoriesIdx) => (
-            <li key={repositoriesIdx}>
-              <ul className="flex flex-col gap-y-6 tablet:gap-y-8">
-                {repositories.map((repositorie, repositorieIdx) => (
-                  <li
-                    key={repositorieIdx}
-                    className="group rounded-[12px] overflow-hidden isolate"
-                  >
-                    <div
-                      style={{
-                        color: invertColor(
-                          bgColor(repositorie.language)?.color || "#4C4C4C",
-                          true
-                        ),
-                        background: `linear-gradient(147.62deg, ${brightenColor(
-                          bgColor(repositorie.language)?.color || "#4C4C4C",
-                          10
-                        )} 10.96%, ${brightenColor(
-                          bgColor(repositorie.language)?.color || "#4C4C4C",
-                          -30
-                        )} 74.86%)`,
-                      }}
-                      className="relative flex flex-col gap-y-[7px] px-[20px] pt-[20px] pb-[23px]"
+      {data.repositories.length === 0 && (
+        <p className="text-[20px] text-center text-[#fff]">
+          레포지토리가 비어 있어요
+        </p>
+      )}
+      {data.repositories.length > 0 && (
+        <ul
+          className="max-w-2xl grid grid-cols-1 desktop:grid-cols-3 tablet:max-w-none tablet:mt-20 mt-16 gap-8"
+          role="list"
+        >
+          {customRepositoriesData(2, data.repositories as IRepositories[]).map(
+            (repositories: IRepositories[], repositoriesIdx) => (
+              <li key={repositoriesIdx}>
+                <ul className="flex flex-col gap-y-6 tablet:gap-y-8">
+                  {repositories.map((repositorie, repositorieIdx) => (
+                    <li
+                      key={repositorieIdx}
+                      className="group rounded-[12px] overflow-hidden isolate"
                     >
-                      <h2 className="text-[24px] font-bold">
-                        {repositorie.name}
-                      </h2>
-                      <p className="text-[16px] font-medium">
-                        {repositorie.description}
-                      </p>
-
-                      <button
-                        onClick={() => {
-                          window.open(repositorie.url, "_blank");
+                      <div
+                        style={{
+                          color: invertColor(
+                            bgColor(repositorie.language)?.color || "#4C4C4C",
+                            true
+                          ),
+                          background: `linear-gradient(147.62deg, ${brightenColor(
+                            bgColor(repositorie.language)?.color || "#4C4C4C",
+                            10
+                          )} 10.96%, ${brightenColor(
+                            bgColor(repositorie.language)?.color || "#4C4C4C",
+                            -30
+                          )} 74.86%)`,
                         }}
-                        type="button"
-                        style={{ transition: "all 0.2s" }}
-                        className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50] hover:bg-[#9DA2B9]"
+                        className="relative flex flex-col gap-y-[7px] px-[20px] pt-[20px] pb-[23px]"
                       >
-                        <ArrowIcon />
-                      </button>
-                    </div>
+                        <h2 className="text-[24px] font-bold">
+                          {repositorie.name}
+                        </h2>
+                        <p className="text-[16px] font-medium">
+                          {repositorie.description}
+                        </p>
 
-                    <div className="flex flex-col gap-y-[18px] bg-[#1A1B24] px-[20px] pt-[13px] pb-[17px]">
-                      <div className="flex items-center gap-x-[18px]">
-                        <div className="flex items-center gap-x-[6px]">
-                          <ForkIcon />
-                          <span className="text-[13px] text-[#9DA2B9]">
-                            {repositorie.forkCount}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-x-[6px]">
-                          <StarIcon />
-                          <span className="text-[13px] text-[#9DA2B9]">
-                            {repositorie.starCount}
-                          </span>
-                        </div>
-                      </div>
-                      {repositorie.topics.length > 0 && (
-                        <div className="flex flex-wrap gap-x-[5px] gap-y-[8px]">
-                          {repositorie.topics.map((topic, topicIdx) => (
-                            <div
-                              key={topicIdx}
-                              className="flex items-center justify-center px-[13px] py-[3px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
-                            >
-                              # {topic}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {repositorie.homepageUrl && (
-                        <div
-                          style={{ transition: "all 0.3s" }}
-                          className="h-0 p-0 group-hover:h-auto group-hover:px-[13px] group-hover:py-[8px] cursor-pointer group flex items-center gap-x-[11px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                        <button
+                          onClick={() => {
+                            window.open(repositorie.url, "_blank");
+                          }}
+                          type="button"
+                          style={{ transition: "all 0.2s" }}
+                          className="absolute bottom-[-25px] right-[25px] flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#393D50] hover:bg-[#9DA2B9]"
                         >
-                          <LinkIcon className="h-0 group-hover:h-auto" />
-                          <a
-                            href={repositorie.homepageUrl}
-                            rel="noreferrer"
-                            target="_blank"
-                            className="hidden group-hover:block truncate text-[12px] text-[#FFFFFF] font-medium hover:underline"
-                          >
-                            {repositorie.homepageUrl}
-                          </a>
+                          <ArrowIcon />
+                        </button>
+                      </div>
+
+                      <div className="flex flex-col gap-y-[18px] bg-[#1A1B24] px-[20px] pt-[13px] pb-[17px]">
+                        <div className="flex items-center gap-x-[18px]">
+                          <div className="flex items-center gap-x-[6px]">
+                            <ForkIcon />
+                            <span className="text-[13px] text-[#9DA2B9]">
+                              {repositorie.forkCount}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-x-[6px]">
+                            <StarIcon />
+                            <span className="text-[13px] text-[#9DA2B9]">
+                              {repositorie.starCount}
+                            </span>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )
-        )}
-      </ul>
+                        {repositorie.topics.length > 0 && (
+                          <div className="flex flex-wrap gap-x-[5px] gap-y-[8px]">
+                            {repositorie.topics.map((topic, topicIdx) => (
+                              <div
+                                key={topicIdx}
+                                className="flex items-center justify-center px-[13px] py-[3px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                              >
+                                # {topic}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {repositorie.homepageUrl && (
+                          <div
+                            style={{ transition: "all 0.3s" }}
+                            className="h-0 p-0 group-hover:h-auto group-hover:px-[13px] group-hover:py-[8px] cursor-pointer group flex items-center gap-x-[11px] text-[12px] text-[#39D353] rounded-[15px] bg-[#393D50]"
+                          >
+                            <LinkIcon className="h-0 group-hover:h-auto" />
+                            <a
+                              href={repositorie.homepageUrl}
+                              rel="noreferrer"
+                              target="_blank"
+                              className="hidden group-hover:block truncate text-[12px] text-[#FFFFFF] font-medium hover:underline"
+                            >
+                              {repositorie.homepageUrl}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )
+          )}
+        </ul>
+      )}
     </section>
   );
 };
