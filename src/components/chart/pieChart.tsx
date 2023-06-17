@@ -76,12 +76,12 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                       y: 0,
                       opacity: 1,
                       pathLength: 1,
-                      fill: bgColor(pie.data.name).color || "#fff",
+                      fill: bgColor(pie.data.name)?.color || "#fff",
                     },
                   };
 
                   const arcWidth = (pie.endAngle - pie.startAngle) / 2;
-                  const isSmallArc = arcWidth < 0.18;
+                  const isSmallArc = arcWidth < 0.12;
 
                   const pos = arcGenerator.centroid({
                     innerRadius: innerRadius,
@@ -137,7 +137,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         fill={
                           isSmallArc
                             ? "#fff"
-                            : invertColor(bgColor(pie.data.name).color, true)
+                            : invertColor(bgColor(pie.data.name)?.color, true)
                         }
                         transform={
                           isSmallArc
@@ -151,7 +151,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         </tspan>
                         <tspan
                           x={0}
-                          y="1.1em"
+                          y={"1.1em"}
                           fontWeight={400}
                           fill={isSmallArc ? "#fff" : ""}
                         >

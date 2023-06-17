@@ -64,7 +64,7 @@ export const Portfolio = () => {
   const navigate = useNavigate();
 
   const { data } = useQuery<IUserData, AxiosError>(
-    ["get_user_info"],
+    ["get_user_info", id],
     async () => {
       const response = await baseURL.get(`/github/user/${id}`);
 

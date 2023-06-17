@@ -8,6 +8,7 @@ import { ReactComponent as Symbol } from "../assets/landing/symbol.svg";
 import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
 import { ReactComponent as ArrowIcon } from "../assets/landing/arrow.svg";
 import { ReactComponent as NotFoundIcon } from "../assets/landing/not_found_icon.svg";
+import { ReactComponent as HistoryIcon } from "../assets/landing/history_icon.svg";
 
 import baseURL from "../api/axios";
 
@@ -36,9 +37,35 @@ const landingVariants = {
 export const MainPage = () => {
   const navigate = useNavigate();
 
+  const formRef = useRef<HTMLFormElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
   const [id, setId] = useState("");
   const [isInvalidId, setIsInvalidId] = useState(false);
+
+  const [isInputFocus, setIsInputFocus] = useState(false);
+
+  const cachedSearchHistory = useMemo(() => {
+    const data = window.localStorage.getItem("searchHistory");
+
+    if (data) {
+      return JSON.parse(data) as string[];
+    }
+    return [];
+  }, []);
+
+  useEffect(() => {
+    const callback = (event: Event) => {
+      const el = formRef.current;
+
+      if (!event || !el || el.contains((event as any).target)) return;
+      setIsInputFocus(false);
+    };
+
+    document.addEventListener("click", callback);
+
+    return () => document.removeEventListener("click", callback);
+  }, [formRef, formRef.current]);
 
   const handleResize = () => {
     const vh = window.innerHeight * 0.01;
@@ -71,6 +98,12 @@ export const MainPage = () => {
     },
     {
       onSuccess: () => {
+        const distinctedHistory = [...new Set([...cachedSearchHistory, id])];
+
+        window.localStorage.setItem(
+          "searchHistory",
+          JSON.stringify(distinctedHistory)
+        );
         navigate(`/${id}`);
       },
       onError: (error) => {
@@ -78,6 +111,18 @@ export const MainPage = () => {
       },
     }
   );
+
+  const autocompleteMatch = useMemo(() => {
+    if (id === "" && cachedSearchHistory) {
+      return cachedSearchHistory;
+    }
+    const reg = new RegExp(id);
+    return cachedSearchHistory.filter(function (term) {
+      if (term.match(reg)) {
+        return term;
+      }
+    });
+  }, [id, cachedSearchHistory]);
 
   const notFoundUser = useMemo(() => {
     if (error) {
@@ -125,6 +170,7 @@ export const MainPage = () => {
         </motion.div>
 
         <motion.form
+          ref={formRef}
           animate={
             notFoundUser || isInvalidId
               ? {
@@ -137,7 +183,7 @@ export const MainPage = () => {
             times: [0, 1],
           }}
           style={{ boxShadow: "0px 4px 10px 0px #00000040 inset" }}
-          className="flex flex-col desktop:w-[444px] tablet:w-full "
+          className="relative flex flex-col desktop:w-[444px] tablet:w-full "
           onSubmit={(e) => {
             window.scrollTo({ left: 0, top: 0 });
             e.preventDefault();
@@ -149,12 +195,23 @@ export const MainPage = () => {
             }
           }}
         >
-          <div className="flex items-center justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]">
+          <div
+            className={clsx(
+              "flex items-center justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]",
+              {
+                "rounded-none rounded-tl-[11px] rounded-tr-[11px]":
+                  cachedSearchHistory.length > 0 && isInputFocus,
+              }
+            )}
+          >
             <div className="flex w-full gap-x-[6px] items-center">
               <GithubLogo />
               <input
                 ref={inputRef}
                 value={id}
+                onFocus={() => {
+                  setIsInputFocus(true);
+                }}
                 onChange={(e) => {
                   if (notFoundUser) {
                     reset();
@@ -187,7 +244,26 @@ export const MainPage = () => {
                 <ArrowIcon />
               )}
             </button>
+            {cachedSearchHistory.length > 0 && isInputFocus && (
+              <div className="absolute left-0 top-[53px] w-full flex flex-col desktop:w-[444px] rounded-bl-[11px] rounded-br-[11px] tablet:w-full bg-[#ffffff] pb-[10px]">
+                {autocompleteMatch.map((history, idx) => (
+                  <div
+                    role="button"
+                    key={idx}
+                    className="cursor-pointer flex items-center gap-x-[10px] px-[21px] py-[11px] hover:bg-[#efefef]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/${history}`);
+                    }}
+                  >
+                    <HistoryIcon width={18} className="mt-[4px]" />
+                    <p>{history}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
           <div className="px-[45px] py-[5px]">
             <>
               {isInvalidId && (

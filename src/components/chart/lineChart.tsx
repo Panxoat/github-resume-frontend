@@ -83,22 +83,24 @@ export const LineChart = ({ index, measure }: ILineChart) => {
                     x={xPos}
                     y={yPos}
                   />
-                  <text
-                    x={
-                      measure +
-                      domMeasure.marginLeft -
-                      (getStringWidth(String(Math.round(measure)), {
-                        "font-size": 10,
-                      }) || 0)
-                    }
-                    y={yPos}
-                    dy={12}
-                    fill="#fff"
-                    textAnchor="start"
-                    fontSize={10}
-                  >
-                    {Math.round(item)}
-                  </text>
+                  {item && (
+                    <text
+                      x={
+                        measure +
+                        domMeasure.marginLeft -
+                        (getStringWidth(String(Math.round(measure)), {
+                          "font-size": 10,
+                        }) || 0)
+                      }
+                      y={yPos}
+                      dy={12}
+                      fill="#fff"
+                      textAnchor="start"
+                      fontSize={10}
+                    >
+                      {Math.round(item)}
+                    </text>
+                  )}
                 </React.Fragment>
               );
             })}
