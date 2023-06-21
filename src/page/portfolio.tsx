@@ -23,6 +23,7 @@ import { useInvertColor } from "../hooks/useColor";
 
 import { Tooltip } from "../components/ui/Tooltip";
 
+import { Footer } from "../components/footer";
 import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/summary/summaryBox";
 import { LineChart } from "../components/chart/lineChart";
@@ -122,9 +123,6 @@ export const Portfolio = () => {
             ref={scrollTargetRef}
             className="overflow-auto w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
           >
-            {/* <article ref={overviewRef}>
-              <Portfolio.OverView data={data} />
-            </article> */}
             <motion.article
               variants={screenVariants}
               initial="offscreen"
@@ -152,6 +150,7 @@ export const Portfolio = () => {
             >
               <Portfolio.Project data={data} />
             </motion.article>
+            <Footer className="relative" />
           </div>
         </article>
       )}
