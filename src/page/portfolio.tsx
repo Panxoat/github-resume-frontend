@@ -199,7 +199,7 @@ Portfolio.Aside = ({
                 alt="profileImage"
               />
             </div>
-            <p className="cursor-pointer tablet:text-[24px] dekstop:text-[28px] font-bold">
+            <p className="cursor-pointer tablet:text-[22px] dekstop:text-[28px] font-bold">
               <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
                 {data.user.name || data.user.id}
               </span>
@@ -463,7 +463,7 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
           <div className="flex items-center justify-center w-full h-[60%] desktop:h-full py-[10px] dekstop:py-[30px] bg-[#1A1B24] rounded-[12px]">
             <div className="flex flex-col items-center gap-y-[30px]">
               <NotFoundIcon />
-              <p className="text-[#9DA2B9]">아직 사용한 언어가 없습니다.</p>
+              <p className="text-[#9DA2B9]">아직 사용한 언어가 없어요.</p>
             </div>
           </div>
         )}
@@ -517,9 +517,9 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                               -30
                             )} 74.86%)`,
                           }}
-                          className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                          className="w-full h-[calc(50%-6px)] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
                         >
-                          <p className="text-[20px] tablet:text-[24px] font-bold">
+                          <p className="text-[20px] font-bold">
                             {languageIdx + 2}위
                           </p>
                           <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
@@ -601,9 +601,10 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
         </div>
       </div>
       {data.repositories.length === 0 && (
-        <p className="text-[20px] text-center text-[#fff]">
-          레포지토리가 비어 있어요
-        </p>
+        <div className="flex flex-col items-center gap-y-[30px] pt-[80px]">
+          <NotFoundIcon />
+          <p className="text-[#9DA2B9]">고정된 레포지토리가 없어요.</p>
+        </div>
       )}
       {data.repositories.length > 0 && (
         <ul

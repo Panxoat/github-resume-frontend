@@ -55,9 +55,22 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
     return d.startAngle + (d.endAngle - d.startAngle) / 2;
   };
 
-  const getPolyLinePos = (prefixValue:number, idx: number, stringWidth: number) => {
-    return prefixValue + idx * idx * 10 - stringWidth
-  }
+  const getStableStringWidth = (stringWidth: number) => {
+    if (stringWidth < 20) {
+      return 20;
+    } else if (stringWidth > 50) {
+      return 50;
+    }
+    return stringWidth;
+  };
+
+  const getPolyLinePos = (
+    prefixValue: number,
+    idx: number,
+    stringWidth: number
+  ) => {
+    return prefixValue + idx * idx * 8.5 - getStableStringWidth(stringWidth);
+  };
 
   return (
     <article ref={ref} className="w-full h-full">
@@ -87,7 +100,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   };
 
                   const arcWidth = (pie.endAngle - pie.startAngle) / 2;
-                  const isSmallArc = arcWidth < 0.10;
+                  const isSmallArc = arcWidth < 0.12;
 
                   const pos = arcGenerator.centroid({
                     innerRadius: innerRadius,
@@ -104,14 +117,22 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   });
 
                   const fixedPos = [
-                    getPolyLinePos(innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1), idx, getStringWidth(pie.data.name) || 0) - 20,
-                    outerPos[1] - idx *idx + 10,
+                    getPolyLinePos(
+                      innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1),
+                      idx,
+                      getStringWidth(pie.data.name) || 0
+                    ) - 20,
+                    outerPos[1] - idx * idx + 10,
                   ];
 
                   const fixedLinePos = [
-                    [pos[0], pos[1]],
+                    pos,
                     [outerPos[0], outerPos[1] - idx * idx + 20],
-                    getPolyLinePos(innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1), idx, getStringWidth(pie.data.name) || 0),
+                    getPolyLinePos(
+                      innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1),
+                      idx,
+                      getStringWidth(pie.data.name) || 0
+                    ),
                     outerPos[1] - idx * idx + 20,
                   ];
 
@@ -138,9 +159,12 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         ></polyline>
                       )}
                       <text
-                        className={clsx("text-[10px] tablet:text-[11px] desktop:text-[16px]", {
-                          "!text-[10px]": isSmallArc
-                        })}
+                        className={clsx(
+                          "text-[10px] tablet:text-[11px] desktop:text-[16px]",
+                          {
+                            "!text-[10px]": isSmallArc,
+                          }
+                        )}
                         fontWeight={600}
                         fill={
                           isSmallArc
