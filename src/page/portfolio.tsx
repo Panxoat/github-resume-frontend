@@ -16,6 +16,7 @@ import { ReactComponent as ForkIcon } from "../assets/portfolio/project/fork.svg
 import { ReactComponent as StarIcon } from "../assets/portfolio/project/star.svg";
 import { ReactComponent as ArrowIcon } from "../assets/portfolio/project/arrow.svg";
 import { ReactComponent as LinkIcon } from "../assets/portfolio/project/link.svg";
+import { ReactComponent as NotFoundIcon } from "../assets/portfolio/project/not_found.svg";
 
 import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
@@ -26,7 +27,7 @@ import { Tooltip } from "../components/ui/Tooltip";
 import { Footer } from "../components/footer";
 import { PortfolioSkeleton } from "../components/skeleton";
 import { SummaryBox } from "../components/summary/summaryBox";
-import { LineChart } from "../components/chart/lineChart";
+import { BarChart } from "../components/chart/barChart";
 import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData, ILanguages, IRepositories } from "../types/portfolio";
@@ -171,7 +172,7 @@ Portfolio.Aside = ({
   };
 }) => {
   const { id } = useParams();
-  const { scrollTarget, overview, share, project } = scrollRef;
+  const { scrollTarget, share, project } = scrollRef;
 
   return (
     <>
@@ -200,7 +201,7 @@ Portfolio.Aside = ({
             </div>
             <p className="cursor-pointer tablet:text-[24px] dekstop:text-[28px] font-bold">
               <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
-                {data.user.name}
+                {data.user.name || data.user.id}
               </span>
               <span className="group-hover:underline decoration-[#9DA2B9] text-[#9DA2B9]">
                 's Portfolio
@@ -346,7 +347,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
         <div className="w-full tablet:w-[40%] flex flex-col tablet:py-[40px] tablet:pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
             {data.user.name}님의
-            <br /> 최근 {data.contributions.recentMonthRange}개월 커밋 횟수
+            <br /> 최근 {data.contributions.recentMonthRange}개월 활동 횟수
           </h1>
           <p className="text-[#393D50] text-[20px]">
             ({timeIndex[timeIndex.length - 1]} ~ {timeIndex[0]})
@@ -366,7 +367,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
           </p>
         </div>
         <div className="w-full h-[200px] tablet:w-[60%] tablet:pl-[0px] tablet:pr-[40px]">
-          <LineChart index={timeIndex} measure={measure} />
+          <BarChart index={timeIndex} measure={measure} />
         </div>
       </motion.div>
     </section>
@@ -458,61 +459,81 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
       </h2>
 
       <div className="w-full h-[600px] desktop:h-[500px] flex flex-col desktop:flex-row items-center gap-[14px] my-[80px]">
-        <div className="w-full h-[60%] desktop:w-[70%] desktop:h-full py-[10px] dekstop:py-[30px] bg-[#1A1B24] rounded-[12px]">
-          <PieChart data={data.languages.slice(0, 5)} />
-        </div>
+        {data.languages.length === 0 && (
+          <div className="flex items-center justify-center w-full h-[60%] desktop:h-full py-[10px] dekstop:py-[30px] bg-[#1A1B24] rounded-[12px]">
+            <div className="flex flex-col items-center gap-y-[30px]">
+              <NotFoundIcon />
+              <p className="text-[#9DA2B9]">아직 사용한 언어가 없습니다.</p>
+            </div>
+          </div>
+        )}
 
-        <div className="w-full h-[30%] desktop:w-[30%] desktop:h-full flex flex-row desktop:flex-col items-center gap-x-[14px] gap-y-[10px]">
-          {first && (
-            <>
-              <div
-                style={{
-                  color: invertColor(bgColor(first.name).color, true),
-                  background: `linear-gradient(147.62deg, ${brightenColor(
-                    bgColor(first.name).color,
-                    10
-                  )} 10.96%, ${brightenColor(
-                    bgColor(first.name).color,
-                    -30
-                  )} 74.86%)`,
-                }}
-                className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
-              >
-                <p className="text-[20px] tablet:text-[24px] font-bold">1위</p>
-                <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
-                  {first.name}
-                </p>
-                <p className="text-[20px]">{first.rate}%</p>
-              </div>
+        {data.languages.length > 0 && (
+          <>
+            <div className="w-full h-[60%] desktop:w-[70%] desktop:h-full py-[10px] dekstop:py-[30px] bg-[#1A1B24] rounded-[12px]">
+              <PieChart data={data.languages.slice(0, 5)} />
+            </div>
 
-              <div className="w-full h-full flex flex-col gap-y-[10px]">
-                {[second || [], third || []].map((language, languageIdx) => (
+            <div className="w-full h-[30%] desktop:w-[30%] desktop:h-full flex flex-row desktop:flex-col items-center gap-x-[14px] gap-y-[10px]">
+              {first && (
+                <>
                   <div
-                    key={languageIdx}
                     style={{
-                      color: invertColor(bgColor(language?.name)?.color, true),
+                      color: invertColor(bgColor(first.name).color, true),
                       background: `linear-gradient(147.62deg, ${brightenColor(
-                        bgColor(language?.name)?.color,
+                        bgColor(first.name).color,
                         10
                       )} 10.96%, ${brightenColor(
-                        bgColor(language?.name)?.color,
+                        bgColor(first.name).color,
                         -30
                       )} 74.86%)`,
                     }}
-                    className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                    className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
                   >
                     <p className="text-[20px] tablet:text-[24px] font-bold">
-                      {languageIdx + 2}위
+                      1위
                     </p>
-                    <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
-                      {language?.name}
+                    <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                      {first.name}
                     </p>
+                    <p className="text-[20px]">{first.rate}%</p>
                   </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+
+                  {second && third && (
+                    <div className="w-full h-full flex flex-col gap-y-[10px]">
+                      {[second, third].map((language, languageIdx) => (
+                        <div
+                          key={languageIdx}
+                          style={{
+                            color: invertColor(
+                              bgColor(language?.name)?.color,
+                              true
+                            ),
+                            background: `linear-gradient(147.62deg, ${brightenColor(
+                              bgColor(language?.name)?.color,
+                              10
+                            )} 10.96%, ${brightenColor(
+                              bgColor(language?.name)?.color,
+                              -30
+                            )} 74.86%)`,
+                          }}
+                          className="w-full h-[50%] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                        >
+                          <p className="text-[20px] tablet:text-[24px] font-bold">
+                            {languageIdx + 2}위
+                          </p>
+                          <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
+                            {language?.name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

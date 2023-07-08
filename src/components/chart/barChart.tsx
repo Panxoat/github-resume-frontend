@@ -6,12 +6,12 @@ import { getStringWidth } from "@visx/text";
 import { useDomMeasure } from "../../hooks/useDomMeasure";
 import React from "react";
 
-interface ILineChart {
+interface IBarChart {
   index: string[];
   measure: number[];
 }
 
-export const LineChart = ({ index, measure }: ILineChart) => {
+export const BarChart = ({ index, measure }: IBarChart) => {
   const { ref, measure: domMeasure } = useDomMeasure({
     mt: 0,
     mb: 25,
@@ -23,7 +23,7 @@ export const LineChart = ({ index, measure }: ILineChart) => {
     .range([domMeasure?.boundedHeight || 0, 0]);
 
   const measureScale = scaleLinear()
-    .domain([0, Math.max(...measure)])
+    .domain([0, Math.max(...measure) || 50])
     .range([0, domMeasure?.boundedWidth || 0]);
 
   const color = scaleLinear<string, number>()

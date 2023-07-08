@@ -1,12 +1,14 @@
 import React from "react";
 import { pie, arc } from "d3-shape";
 import { motion } from "framer-motion";
+import clsx from "clsx";
 
 import { useLanguageColor } from "../../hooks/useLanguageColor";
 import { useInvertColor } from "../../hooks/useColor";
 import { useDomMeasure } from "../../hooks/useDomMeasure";
 
 import type { PieArcDatum } from "d3-shape";
+import { getStringWidth } from "@visx/text";
 
 interface IPieChart {
   data?: {
@@ -53,6 +55,10 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
     return d.startAngle + (d.endAngle - d.startAngle) / 2;
   };
 
+  const getPolyLinePos = (prefixValue:number, idx: number, stringWidth: number) => {
+    return prefixValue + idx * idx * 10 - stringWidth
+  }
+
   return (
     <article ref={ref} className="w-full h-full">
       {domMeasure && (
@@ -64,7 +70,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
               })`}
             >
               {pieGenerator &&
-                pieGenerator.map((pie) => {
+                pieGenerator.map((pie, idx) => {
                   const path = {
                     start: {
                       pathLength: 0,
@@ -81,7 +87,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   };
 
                   const arcWidth = (pie.endAngle - pie.startAngle) / 2;
-                  const isSmallArc = arcWidth < 0.12;
+                  const isSmallArc = arcWidth < 0.10;
 
                   const pos = arcGenerator.centroid({
                     innerRadius: innerRadius,
@@ -98,15 +104,15 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   });
 
                   const fixedPos = [
-                    innerRadius * (getMidAngle(pie) < Math.PI ? 1 : -1),
-                    outerPos[1],
+                    getPolyLinePos(innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1), idx, getStringWidth(pie.data.name) || 0) - 20,
+                    outerPos[1] - idx *idx + 10,
                   ];
 
                   const fixedLinePos = [
-                    pos,
-                    outerPos,
-                    innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1),
-                    outerPos[1],
+                    [pos[0], pos[1]],
+                    [outerPos[0], outerPos[1] - idx * idx + 20],
+                    getPolyLinePos(innerRadius * 0.8 * (getMidAngle(pie) < Math.PI ? 1 : -1), idx, getStringWidth(pie.data.name) || 0),
+                    outerPos[1] - idx * idx + 20,
                   ];
 
                   return (
@@ -123,7 +129,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                             endAngle: pie.endAngle,
                           }) || ""
                         }
-                      ></motion.path>
+                      />
                       {isSmallArc && (
                         <polyline
                           fill="none"
@@ -132,7 +138,9 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         ></polyline>
                       )}
                       <text
-                        className="text-[10px] tablet:text-[11px] desktop:text-[16px]"
+                        className={clsx("text-[10px] tablet:text-[11px] desktop:text-[16px]", {
+                          "!text-[10px]": isSmallArc
+                        })}
                         fontWeight={600}
                         fill={
                           isSmallArc
@@ -141,7 +149,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         }
                         transform={
                           isSmallArc
-                            ? "translate(" + fixedPos + ")"
+                            ? `translate(${fixedPos})`
                             : `translate(${pos})`
                         }
                         textAnchor="middle"
