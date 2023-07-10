@@ -178,12 +178,12 @@ Portfolio.Aside = ({
     <>
       <section>
         <div
-          className="group flex flex-col"
+          className="cursor-pointer group w-fit flex flex-col"
           onClick={() => {
             window.open(`https://github.com/${data.user.id}`, "_blank");
           }}
         >
-          <Tooltip
+          {/* <Tooltip
             textClassName="!left-[60%] !bottom-[calc(100%-50px)]"
             title={
               <div className="flex items-center gap-x-[5px] px-[4px] py-[5px] text-[15px] text-[#D9D9D9] font-medium">
@@ -192,22 +192,23 @@ Portfolio.Aside = ({
               </div>
             }
           >
-            <div className="flex items-center gap-x-[12px]">
-              <img
-                className="cursor-pointer w-[60px] h-[60px] rounded-full group-hover:scale-110 group-hover:shadow-[0px_0px_20px_1px_grey]"
-                src={data.user.imageUrl}
-                alt="profileImage"
-              />
-            </div>
-            <p className="cursor-pointer tablet:text-[22px] dekstop:text-[28px] font-bold">
-              <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
-                {data.user.name || data.user.id}
-              </span>
-              <span className="group-hover:underline decoration-[#9DA2B9] text-[#9DA2B9]">
-                's Portfolio
-              </span>
-            </p>
-          </Tooltip>
+            
+          </Tooltip> */}
+          <div className="flex items-center gap-x-[12px]">
+            <img
+              className=" w-[60px] h-[60px] rounded-full group-hover:scale-110 group-hover:shadow-[0px_0px_20px_1px_grey]"
+              src={data.user.imageUrl}
+              alt="profileImage"
+            />
+          </div>
+          <p className="cursor-pointer tablet:text-[22px] dekstop:text-[28px] font-bold">
+            <span className="group-hover:underline decoration-[#EC8D03] text-[#EC8D03]">
+              {data.user.name || data.user.id}
+            </span>
+            <span className="group-hover:underline decoration-[#9DA2B9] text-[#9DA2B9]">
+              's Portfolio
+            </span>
+          </p>
           <p className="cursor-pointer group-hover:underline text-[14px] text-[#444859]">
             @{id}
           </p>

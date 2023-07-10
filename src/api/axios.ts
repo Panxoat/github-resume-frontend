@@ -3,7 +3,9 @@ import axios from "axios";
 const { DEV, VITE_PROD_BASE_URL } = import.meta.env;
 
 const instance = axios.create({
-  baseURL: DEV ? "http://localhost:3000" : VITE_PROD_BASE_URL,
+  baseURL: DEV
+    ? "https://github-resume.api.consistent.kr/"
+    : VITE_PROD_BASE_URL,
 });
 
 axios.interceptors.request.use(

@@ -162,7 +162,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                         className={clsx(
                           "text-[10px] tablet:text-[11px] desktop:text-[16px]",
                           {
-                            "!text-[10px]": isSmallArc,
+                            "!text-[12px]": isSmallArc,
                           }
                         )}
                         fontWeight={600}

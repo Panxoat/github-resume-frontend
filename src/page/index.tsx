@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clsx } from "clsx";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { ReactComponent as Symbol } from "../assets/landing/symbol.svg";
 import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
 import { ReactComponent as ArrowIcon } from "../assets/landing/arrow.svg";
-import { ReactComponent as NotFoundIcon } from "../assets/landing/not_found_icon.svg";
+import { ReactComponent as XIcon } from "../assets/landing/not_found_icon.svg";
 import { ReactComponent as HistoryIcon } from "../assets/landing/history_icon.svg";
 
 import baseURL from "../api/axios";
@@ -44,17 +44,22 @@ export const MainPage = () => {
 
   const [id, setId] = useState("");
   const [isInvalidId, setIsInvalidId] = useState(false);
-
   const [isInputFocus, setIsInputFocus] = useState(false);
 
-  const cachedSearchHistory = useMemo(() => {
+  const cachedSearchHistory: string[] = useMemo(() => {
     const data = window.localStorage.getItem("searchHistory");
 
     if (data) {
       return JSON.parse(data) as string[];
     }
-    return [];
-  }, []);
+    return [""];
+  }, [window.localStorage.getItem("searchHistory")]);
+
+  const [historyList, setHistoryList] = useState(cachedSearchHistory);
+
+  useEffect(() => {
+    window.localStorage.setItem("searchHistory", JSON.stringify(historyList));
+  }, [historyList]);
 
   useEffect(() => {
     const callback = (event: Event) => {
@@ -114,17 +119,24 @@ export const MainPage = () => {
     }
   );
 
+  const onDeleteHistory = useCallback(
+    (name: string) => {
+      setHistoryList(historyList.filter((history) => history !== name));
+    },
+    [historyList]
+  );
+
   const autocompleteMatch = useMemo(() => {
-    if (id === "" && cachedSearchHistory) {
-      return cachedSearchHistory;
+    if (id === "" && historyList) {
+      return historyList;
     }
     const reg = new RegExp(id);
-    return cachedSearchHistory.filter(function (term) {
+    return historyList.filter(function (term) {
       if (term.match(reg)) {
         return term;
       }
     });
-  }, [id, cachedSearchHistory]);
+  }, [id, historyList]);
 
   const notFoundUser = useMemo(() => {
     if (error) {
@@ -254,7 +266,7 @@ export const MainPage = () => {
                   )}
                 >
                   {error ? (
-                    <>{notFoundUser && <NotFoundIcon />}</>
+                    <>{notFoundUser && <XIcon />}</>
                   ) : isLoading ? (
                     <Spinner />
                   ) : (
@@ -262,20 +274,31 @@ export const MainPage = () => {
                   )}
                 </button>
 
-                {cachedSearchHistory.length > 0 && isInputFocus && (
+                {historyList.length > 0 && isInputFocus && (
                   <div className="absolute overflow-hidden left-0 top-[53px] w-full max-h-[250px] flex flex-col desktop:w-[444px] rounded-bl-[11px] rounded-br-[11px] tablet:w-full bg-[#ffffff] pb-[10px]">
                     {autocompleteMatch.map((history, idx) => (
-                      <div
-                        role="button"
-                        key={idx}
-                        className="cursor-pointer flex items-center gap-x-[10px] px-[21px] py-[11px] hover:bg-[#efefef]"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/${history}`);
-                        }}
-                      >
-                        <HistoryIcon width={18} className="mt-[4px]" />
-                        <p>{history}</p>
+                      <div className="cursor-pointer flex items-center justify-between px-[21px] hover:bg-[#efefef]">
+                        <div
+                          role="button"
+                          key={idx}
+                          className="flex items-center gap-x-[10px] py-[11px] "
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/${history}`);
+                          }}
+                        >
+                          <HistoryIcon width={18} className="mt-[2px]" />
+                          <p>{history}</p>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onDeleteHistory(history);
+                          }}
+                          className="rounded-full p-[6px] hover:bg-[#d2d2d2]"
+                        >
+                          <XIcon className="w-[10px] h-[10px] [&>path]:fill-[#424242] " />
+                        </button>
                       </div>
                     ))}
                   </div>
