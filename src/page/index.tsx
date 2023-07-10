@@ -131,6 +131,7 @@ export const MainPage = () => {
       return historyList;
     }
     const reg = new RegExp(id);
+
     return historyList.filter(function (term) {
       if (term.match(reg)) {
         return term;
