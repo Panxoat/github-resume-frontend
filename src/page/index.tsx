@@ -52,7 +52,7 @@ export const MainPage = () => {
     if (data) {
       return JSON.parse(data) as string[];
     }
-    return [""];
+    return [];
   }, [window.localStorage.getItem("searchHistory")]);
 
   const [historyList, setHistoryList] = useState(cachedSearchHistory);
@@ -321,7 +321,9 @@ export const MainPage = () => {
           </div>
         )}
 
-        <Footer className="absolute pb-[40px]" />
+        <div className="hidden tablet:flex">
+          <Footer className="absolute pb-[40px]" />
+        </div>
       </article>
     </>
   );
