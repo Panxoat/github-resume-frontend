@@ -342,7 +342,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
         <div className="w-full tablet:w-[40%] flex flex-col tablet:py-[40px] tablet:pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
             {data.user.name || data.user.id}님의
-            <br /> 최근 {data.contributions.recentMonthRange}개월 활동 횟수
+            <br /> 최근 {data.contributions.recentMonthRange}개월 활동
           </h1>
           <p className="text-[#393D50] text-[20px]">
             ({timeIndex[timeIndex.length - 1]} ~ {timeIndex[0]})
@@ -443,7 +443,7 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
   const [first, second, third] = data.languages.slice(0, 3);
 
   return (
-    <section className="pt-[20px] tablet:pt-[86px] desktop:pt-[106px] flex flex-col">
+    <section className="pt-[20px] tablet:pt-[86px] desktop:pt-[100px] flex flex-col">
       <h1 className="text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
         <span className="text-[40px] tablet:text-[22px]">🌐</span>
         <br />
@@ -579,7 +579,7 @@ Portfolio.Project = ({ data }: { data: IUserData }) => {
               style={{ wordBreak: "keep-all", whiteSpace: "break-spaces" }}
               className="text-[18px] tablet:text-[20px] text-[#ffffff] font-extralight pt-[16px]"
             >
-              평가에 도움될만한 레포를 모아봤어요!
+              {data.user.name || data.user.id}님의 주요한 프로젝트를 모아봤어요!
             </p>
           </div>
           <ProjectBanner className="hidden tablet:flex" />

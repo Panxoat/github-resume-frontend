@@ -174,9 +174,7 @@ export const MainPage = () => {
             className="flex flex-col gap-y-[30px]"
           >
             <h1 className="text-[32px] tablet:text-[45px] text-[#ffffff] font-semibold">
-              확인이 번거로운
-              <br />
-              개발자의 GitHub를
+              개발자의 GitHub
             </h1>
             <Symbol className="w-full h-full tablet:w-fit" />
             <h1 className="text-[32px] tablet:text-[45px] text-[#ffffff] font-semibold">
