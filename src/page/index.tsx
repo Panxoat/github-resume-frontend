@@ -228,7 +228,7 @@ export const MainPage = () => {
                   "flex items-center justify-between desktop:w-[444px] tablet:w-full rounded-[46px] px-[21px] py-[11px] bg-[#ffffff]",
                   {
                     "rounded-none rounded-tl-[11px] rounded-tr-[11px]":
-                      cachedSearchHistory.length > 0 && isInputFocus,
+                      historyList.length > 0 && isInputFocus,
                   }
                 )}
               >
@@ -291,6 +291,7 @@ export const MainPage = () => {
                         </div>
                         <button
                           onClick={(e) => {
+                            e.stopPropagation();
                             e.preventDefault();
                             onDeleteHistory(history);
                           }}
