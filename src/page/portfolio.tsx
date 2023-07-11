@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
-
 import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
 import { ReactComponent as CommitIcon } from "../assets/portfolio/aside/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/aside/language_icon.svg";
@@ -23,6 +21,8 @@ import { useLanguageColor } from "../hooks/useLanguageColor";
 import { useInvertColor } from "../hooks/useColor";
 
 import { Tooltip } from "../components/ui/Tooltip";
+
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 import { Footer } from "../components/footer";
 import { PortfolioSkeleton } from "../components/skeleton";
@@ -183,17 +183,6 @@ Portfolio.Aside = ({
             window.open(`https://github.com/${data.user.id}`, "_blank");
           }}
         >
-          {/* <Tooltip
-            textClassName="!left-[60%] !bottom-[calc(100%-50px)]"
-            title={
-              <div className="flex items-center gap-x-[5px] px-[4px] py-[5px] text-[15px] text-[#D9D9D9] font-medium">
-                <GithubLogo className="[&>path]:fill-[#D9D9D9]" />
-                <span>GitHub로 이동</span>
-              </div>
-            }
-          >
-            
-          </Tooltip> */}
           <div className="flex items-center gap-x-[12px]">
             <img
               className=" w-[60px] h-[60px] rounded-full group-hover:scale-110 group-hover:shadow-[0px_0px_20px_1px_grey]"
@@ -218,38 +207,43 @@ Portfolio.Aside = ({
         </p>
 
         <div className="flex items-center gap-x-[13px] pt-[25px]">
-          <Tooltip
-            title={`${
+          <a
+            data-tooltip-id="email-tooltip"
+            data-tooltip-content={`${
               data.user.contact.email
                 ? data.user.contact.email
                 : "이메일이 존재하지 않습니다"
             }`}
+            href={`mailto:${data.user.contact.email}`}
+            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
           >
-            <a
-              href={`mailto:${data.user.contact.email}`}
-              className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
-            >
-              <EmailIcon className="group-hover:[&>path]:fill-[#000000]" />
-            </a>
-          </Tooltip>
-          <Tooltip
-            title={`${
+            <EmailIcon className="group-hover:[&>path]:fill-[#000000]" />
+          </a>
+          <ReactTooltip
+            id="email-tooltip"
+            style={{ backgroundColor: "#5c5c5c", borderRadius: "20px" }}
+          />
+
+          <button
+            data-tooltip-id="website-tooltip"
+            data-tooltip-content={`${
               data.user.contact.websiteUrl
                 ? data.user.contact.websiteUrl
                 : "웹사이트가 존재하지 않습니다"
             }`}
+            className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
+            onClick={() => {
+              if (data.user.contact.websiteUrl) {
+                window.open(data.user.contact.websiteUrl, "_blank");
+              }
+            }}
           >
-            <button
-              className="disabled:pointer-events-none group w-[36px] flex items-center justify-center py-[10px] rounded-[8px] bg-[#1A1B24] hover:bg-[#9DA2B9]"
-              onClick={() => {
-                if (data.user.contact.websiteUrl) {
-                  window.open(data.user.contact.websiteUrl, "_blank");
-                }
-              }}
-            >
-              <LinkIcon className="w-[16px] h-[16px] [&>path]:fill-[#9DA2B9] group-hover:[&>path]:fill-[#000000]" />
-            </button>
-          </Tooltip>
+            <LinkIcon className="w-[16px] h-[16px] [&>path]:fill-[#9DA2B9] group-hover:[&>path]:fill-[#000000]" />
+          </button>
+          <ReactTooltip
+            id="website-tooltip"
+            style={{ backgroundColor: "#5c5c5c", borderRadius: "20px" }}
+          />
         </div>
       </section>
 
@@ -347,7 +341,7 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
       >
         <div className="w-full tablet:w-[40%] flex flex-col tablet:py-[40px] tablet:pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
-            {data.user.name}님의
+            {data.user.name || data.user.id}님의
             <br /> 최근 {data.contributions.recentMonthRange}개월 활동 횟수
           </h1>
           <p className="text-[#393D50] text-[20px]">
