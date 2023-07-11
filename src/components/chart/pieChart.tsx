@@ -100,6 +100,7 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                   };
 
                   const arcWidth = (pie.endAngle - pie.startAngle) / 2;
+                  const isTruncate = arcWidth < 0.5;
                   const isSmallArc = arcWidth < 0.12;
 
                   const pos = arcGenerator.centroid({
@@ -158,7 +159,11 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                           points={String(fixedLinePos)}
                         ></polyline>
                       )}
-                      <text
+                      <foreignObject
+                        width={100}
+                        height={50}
+                        x={isSmallArc ? fixedPos[0] - 50 : pos[0] - 50}
+                        y={isSmallArc ? fixedPos[1] - 15 : pos[1] - 20}
                         className={clsx(
                           "text-[10px] tablet:text-[11px] desktop:text-[16px]",
                           {
@@ -171,25 +176,43 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
                             ? "#fff"
                             : invertColor(bgColor(pie.data.name)?.color, true)
                         }
-                        transform={
-                          isSmallArc
-                            ? `translate(${fixedPos})`
-                            : `translate(${pos})`
-                        }
-                        textAnchor="middle"
                       >
-                        <tspan x={0} y={0}>
-                          {pie.data.name}
-                        </tspan>
-                        <tspan
-                          x={0}
-                          y={"1.1em"}
-                          fontWeight={400}
-                          fill={isSmallArc ? "#fff" : ""}
+                        <div
+                          className={clsx("flex flex-col items-center", {
+                            "h-[33px]": isSmallArc,
+                          })}
                         >
-                          {pie.data.rate}%
-                        </tspan>
-                      </text>
+                          <p
+                            className={clsx(
+                              `truncate text-[${invertColor(
+                                bgColor(pie.data.name)?.color,
+                                true
+                              )}]`,
+                              {
+                                "max-w-[75px]":
+                                  isTruncate ||
+                                  (getStringWidth(pie.data.name) || 0) > 75,
+                                "text-[#ffffff]": isSmallArc,
+                              }
+                            )}
+                          >
+                            {pie.data.name}
+                          </p>
+                          <p
+                            className={clsx(
+                              `text-[${invertColor(
+                                bgColor(pie.data.name)?.color,
+                                true
+                              )}]`,
+                              {
+                                "text-[#ffffff]": isSmallArc,
+                              }
+                            )}
+                          >
+                            {pie.data.rate}%
+                          </p>
+                        </div>
+                      </foreignObject>
                     </React.Fragment>
                   );
                 })}
