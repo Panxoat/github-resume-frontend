@@ -69,7 +69,20 @@ export const PieChart = ({ data, width, height }: IPieChart) => {
     idx: number,
     stringWidth: number
   ) => {
-    return prefixValue + idx * idx * 8.5 - getStableStringWidth(stringWidth);
+    const accNextIdxStringWidth =
+      pieGenerator
+        ?.slice(idx)
+        .reduce(
+          (acc, curr) => acc + (getStringWidth(curr.data.name) || 0),
+          0
+        ) || 0;
+
+    return (
+      prefixValue +
+      idx * idx * 8.5 -
+      accNextIdxStringWidth -
+      getStableStringWidth(stringWidth)
+    );
   };
 
   return (
