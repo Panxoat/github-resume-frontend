@@ -35,6 +35,8 @@ export const useInvertColor = () => {
       16
     )}${newBlue.toString(16)}`;
 
+    console.log(hexColor, newHexColor);
+
     return newHexColor;
   }
 

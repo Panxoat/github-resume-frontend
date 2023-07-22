@@ -32,6 +32,7 @@ import { PieChart } from "../components/chart/pieChart";
 
 import type { IUserData, ILanguages, IRepositories } from "../types/portfolio";
 import { AxiosError } from "axios";
+import clsx from "clsx";
 
 const screenVariants = {
   offscreen: {
@@ -45,18 +46,6 @@ const screenVariants = {
       type: "spring",
       bounce: 0.4,
       duration: 2,
-    },
-  },
-};
-
-const boxVariants = {
-  ...screenVariants,
-  hover: {
-    scale: 1.002,
-    transition: {
-      duration: 0.3,
-      type: "tween",
-      ease: "easeOut",
     },
   },
 };
@@ -107,7 +96,7 @@ export const Portfolio = () => {
       {!data && <PortfolioSkeleton />}
 
       {data && (
-        <article className="w-full h-screen flex gap-x-[20px] px-[10px] pt-[20px] pb-[40px] tablet:gap-x-[20px] tablet:px-[30px] tablet:py-[40px] desktop:gap-x-[40px] desktop:px-[40px] desktop:py-[50px]">
+        <article className="w-full h-screen flex gap-x-[20px] px-[10px] pt-[20px] tablet:gap-x-[20px] tablet:px-[30px] tablet:pt-[40px] desktop:gap-x-[40px] desktop:px-[40px] desktop:pt-[50px]">
           <aside className="w-[20%] hidden tablet:block">
             <Portfolio.Aside
               data={data}
@@ -122,7 +111,7 @@ export const Portfolio = () => {
 
           <div
             ref={scrollTargetRef}
-            className="overflow-auto w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
+            className="overflow-auto no-scrollbar w-full tablet:w-[80%] flex flex-col gap-y-[32px]"
           >
             <motion.article
               variants={screenVariants}
@@ -330,15 +319,8 @@ Portfolio.OverView = ({ data }: { data: IUserData }) => {
   const accMeasure = measure.reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <section className="  w-full">
-      <motion.div
-        variants={boxVariants}
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.3 }}
-        whileHover="hover"
-        className="flex flex-col tablet:flex-row justify-center items-center p-[40px] tablet:p-0 tablet:justify-between rounded-[12px] bg-[#1A1B24]"
-      >
+    <section className="w-full">
+      <motion.div className="flex flex-col tablet:flex-row justify-center items-center p-[40px] tablet:p-0 tablet:justify-between rounded-[12px] bg-[#1A1B24]">
         <div className="w-full tablet:w-[40%] flex flex-col tablet:py-[40px] tablet:pl-[40px]">
           <h1 className="text-[#ffffff] text-[22px] tablet:text-[24px] desktop:text-[28px] font-bold">
             {data.user.name || data.user.id}님의
@@ -500,6 +482,76 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                   </div>
 
                   {(second || third) && (
+                    <div className="w-full h-full flex-col dekstop:max-h-[50%]">
+                      {second && (
+                        <div
+                          className={clsx("w-full flex flex-col gap-y-[10px]", {
+                            "h-full": !third,
+                          })}
+                        >
+                          <div
+                            style={{
+                              color: invertColor(
+                                bgColor(second.name).color,
+                                true
+                              ),
+                              background: `linear-gradient(147.62deg, ${brightenColor(
+                                bgColor(second.name).color,
+                                10
+                              )} 10.96%, ${brightenColor(
+                                bgColor(second.name).color,
+                                -30
+                              )} 74.86%)`,
+                            }}
+                            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                          >
+                            <p className="text-[20px] tablet:text-[24px] font-bold">
+                              2위
+                            </p>
+                            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                              {second.name}
+                            </p>
+                            <p className="text-[20px] hidden desktop:flex">
+                              {second.rate}%
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {third && (
+                        <div className="w-full flex flex-col gap-y-[10px]">
+                          <div
+                            style={{
+                              color: invertColor(
+                                bgColor(third.name).color,
+                                true
+                              ),
+                              background: `linear-gradient(147.62deg, ${brightenColor(
+                                third.name.color,
+                                10
+                              )} 10.96%, ${brightenColor(
+                                third.name.color,
+                                -30
+                              )} 74.86%)`,
+                            }}
+                            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                          >
+                            <p className="text-[20px] tablet:text-[24px] font-bold">
+                              3위
+                            </p>
+                            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                              {third.name}
+                            </p>
+                            <p className="text-[20px] hidden desktop:flex">
+                              {third.rate}%
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* {(second || third) && (
                     <div className="w-full h-full flex flex-col gap-y-[10px]">
                       {[second || [], third || []].map(
                         (language, languageIdx) => (
@@ -534,7 +586,7 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                         )
                       )}
                     </div>
-                  )}
+                  )} */}
                 </>
               )}
             </div>

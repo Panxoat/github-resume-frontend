@@ -4,7 +4,7 @@ export const Footer = ({ className }: { className?: string }) => {
   return (
     <footer
       className={twMerge(
-        "bottom-[0px] left-[50%] translate-x-[-50%] w-full text-center",
+        "bottom-[0px] left-[50%] translate-x-[-50%] w-full text-center py-[20px]",
         className
       )}
     >
