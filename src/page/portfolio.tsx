@@ -455,7 +455,7 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
         언어 별 점유율
       </h1>
       <h2 className="w-full text-center text-[20px] text-[#9DA2B9] pt-[7px] tablet:pt-[14px]">
-        어떤 언어를 가장 많이 사용할까요?
+        최근에 어떤 언어를 가장 많이 사용했을까요?
       </h2>
 
       <div className="w-full h-[600px] desktop:h-[500px] flex flex-col desktop:flex-row items-center gap-[14px] my-[80px]">
