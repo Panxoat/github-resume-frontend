@@ -378,6 +378,7 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
             acc = {
               rate: curr.rate,
               name: curr.name,
+              color: curr.color,
             };
           }
           return acc;
@@ -385,6 +386,7 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
         {
           rate: 0,
           name: "",
+          color: "",
         }
       );
     }
@@ -418,7 +420,10 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
       <SummaryBox>
         <SummaryBox.Title>최다 사용 언어</SummaryBox.Title>
         <SummaryBox.Content>
-          <span className="text-[#F7DF1E] text-[24px] font-bold">
+          <span
+            style={{ color: mostUsageLanguage?.color }}
+            className="text-[24px] font-bold"
+          >
             {mostUsageLanguage ? mostUsageLanguage.name : "없음"}
           </span>
         </SummaryBox.Content>
@@ -494,34 +499,40 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                     <p className="text-[20px]">{first.rate}%</p>
                   </div>
 
-                  {second && third && (
+                  {(second || third) && (
                     <div className="w-full h-full flex flex-col gap-y-[10px]">
-                      {[second, third].map((language, languageIdx) => (
-                        <div
-                          key={languageIdx}
-                          style={{
-                            color: invertColor(
-                              bgColor(language?.name)?.color,
-                              true
-                            ),
-                            background: `linear-gradient(147.62deg, ${brightenColor(
-                              bgColor(language?.name)?.color,
-                              10
-                            )} 10.96%, ${brightenColor(
-                              bgColor(language?.name)?.color,
-                              -30
-                            )} 74.86%)`,
-                          }}
-                          className="w-full h-[calc(50%-6px)] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
-                        >
-                          <p className="text-[20px] font-bold">
-                            {languageIdx + 2}위
-                          </p>
-                          <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
-                            {language?.name}
-                          </p>
-                        </div>
-                      ))}
+                      {[second || [], third || []].map(
+                        (language, languageIdx) => (
+                          <>
+                            {language.name && (
+                              <div
+                                key={languageIdx}
+                                style={{
+                                  color: invertColor(
+                                    bgColor(language?.name)?.color,
+                                    true
+                                  ),
+                                  background: `linear-gradient(147.62deg, ${brightenColor(
+                                    bgColor(language?.name)?.color,
+                                    10
+                                  )} 10.96%, ${brightenColor(
+                                    bgColor(language?.name)?.color,
+                                    -30
+                                  )} 74.86%)`,
+                                }}
+                                className="w-full h-[calc(50%-6px)] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                              >
+                                <p className="text-[20px] font-bold">
+                                  {languageIdx + 2}위
+                                </p>
+                                <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
+                                  {language?.name}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )
+                      )}
                     </div>
                   )}
                 </>

@@ -1,6 +1,7 @@
 export type ILanguages = {
   rate: number;
   name: string;
+  color: string;
 };
 
 export type ISocialAccounts = {
