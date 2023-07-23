@@ -280,7 +280,7 @@ export const MainPage = () => {
                         <div
                           role="button"
                           key={idx}
-                          className="flex items-center gap-x-[10px] py-[11px] "
+                          className="flex w-full items-center gap-x-[10px] py-[11px] "
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate(`/${history}`);

@@ -429,6 +429,10 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
 
   const [first, second, third] = data.languages.slice(0, 3);
 
+  const isCSSSuported = useCallback((style: string) => {
+    return CSS.supports(style);
+  }, []);
+
   return (
     <section className="pt-[20px] tablet:pt-[86px] desktop:pt-[100px] flex flex-col">
       <h1 className="text-[22px] tablet:text-[32px] desktop:text-32px] text-[#8EEFFF] text-center font-extrabold">
@@ -482,10 +486,10 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                   </div>
 
                   {(second || third) && (
-                    <div className="w-full h-full flex-col dekstop:max-h-[50%]">
+                    <div className="w-full h-full flex flex-col dekstop:max-h-[50%] gap-y-[10px]">
                       {second && (
                         <div
-                          className={clsx("w-full flex flex-col gap-y-[10px]", {
+                          className={clsx("w-full flex flex-col", {
                             "h-full": !third,
                           })}
                         >
@@ -503,15 +507,15 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                                 -30
                               )} 74.86%)`,
                             }}
-                            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                            className="w-full h-full flex flex-col px-[22px] py-[10px] dekstop:py-[22px] rounded-[12px]"
                           >
-                            <p className="text-[20px] tablet:text-[24px] font-bold">
+                            <p className="text-[18px] desktop:text-[20px] font-bold">
                               2위
                             </p>
-                            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                            <p className="truncate text-[18px] desktop:text-[20px] pt-[5px] font-semibold">
                               {second.name}
                             </p>
-                            <p className="text-[20px] hidden desktop:flex">
+                            <p className="text-[18px] desktop:text-[20px] hidden desktop:flex">
                               {second.rate}%
                             </p>
                           </div>
@@ -519,30 +523,40 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                       )}
 
                       {third && (
-                        <div className="w-full flex flex-col gap-y-[10px]">
+                        <div className="w-full flex flex-col">
                           <div
                             style={{
                               color: invertColor(
                                 bgColor(third.name).color,
                                 true
                               ),
-                              background: `linear-gradient(147.62deg, ${brightenColor(
-                                third.name.color,
-                                10
-                              )} 10.96%, ${brightenColor(
-                                third.name.color,
-                                -30
-                              )} 74.86%)`,
+                              background: isCSSSuported(
+                                `linear-gradient(147.62deg, ${brightenColor(
+                                  third.color,
+                                  10
+                                )} 10.96%, ${brightenColor(
+                                  third.color,
+                                  -30
+                                )} 74.86%)`
+                              )
+                                ? `linear-gradient(147.62deg, ${brightenColor(
+                                    third.color,
+                                    10
+                                  )} 10.96%, ${brightenColor(
+                                    third.color,
+                                    -30
+                                  )} 74.86%)`
+                                : third.color,
                             }}
-                            className="w-full h-full flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
+                            className="w-full h-full flex flex-col px-[22px] py-[10px] dekstop:py-[22px] rounded-[12px]"
                           >
-                            <p className="text-[20px] tablet:text-[24px] font-bold">
+                            <p className="text-[18px] dekstop:text-[20px] font-bold">
                               3위
                             </p>
-                            <p className="truncate text-[20px] tablet:text-[24x] pt-[5px] font-semibold">
+                            <p className="truncate text-[18px] dekstop:text-[20px] pt-[5px] font-semibold">
                               {third.name}
                             </p>
-                            <p className="text-[20px] hidden desktop:flex">
+                            <p className="text-[18px] desktop:text-[20px] hidden desktop:flex">
                               {third.rate}%
                             </p>
                           </div>
@@ -550,43 +564,6 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                       )}
                     </div>
                   )}
-
-                  {/* {(second || third) && (
-                    <div className="w-full h-full flex flex-col gap-y-[10px]">
-                      {[second || [], third || []].map(
-                        (language, languageIdx) => (
-                          <>
-                            {language.name && (
-                              <div
-                                key={languageIdx}
-                                style={{
-                                  color: invertColor(
-                                    bgColor(language?.name)?.color,
-                                    true
-                                  ),
-                                  background: `linear-gradient(147.62deg, ${brightenColor(
-                                    bgColor(language?.name)?.color,
-                                    10
-                                  )} 10.96%, ${brightenColor(
-                                    bgColor(language?.name)?.color,
-                                    -30
-                                  )} 74.86%)`,
-                                }}
-                                className="w-full h-[calc(50%-6px)] desktop:h-[50%] flex flex-col px-[22px] py-[12px] dekstop:py-[22px] rounded-[12px]"
-                              >
-                                <p className="text-[20px] font-bold">
-                                  {languageIdx + 2}위
-                                </p>
-                                <p className="truncate text-[18px] tablet:text-[20px] pt-[5px] font-semibold">
-                                  {language?.name}
-                                </p>
-                              </div>
-                            )}
-                          </>
-                        )
-                      )}
-                    </div>
-                  )} */}
                 </>
               )}
             </div>
