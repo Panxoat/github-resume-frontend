@@ -126,14 +126,19 @@ export const MainPage = () => {
     [historyList]
   );
 
+  const escapeRegex = (pattern: string) => {
+    return pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  };
+
   const autocompleteMatch = useMemo(() => {
     if (id === "" && historyList) {
       return historyList;
     }
-    const reg = new RegExp(id);
+
+    const reg = escapeRegex(id);
 
     return historyList.filter(function (term) {
-      if (term.match(reg)) {
+      if (id.search(reg) !== -1) {
         return term;
       }
     });
