@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import { ReactComponent as FollowerIcon } from "../assets/portfolio/aside/follower_icon.svg";
+import { ReactComponent as CalendarIcon } from "../assets/portfolio/aside/calendar_icon.svg";
 import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
 import { ReactComponent as CommitIcon } from "../assets/portfolio/aside/commit_icon.svg";
 import { ReactComponent as LanguageIcon } from "../assets/portfolio/aside/language_icon.svg";
@@ -194,8 +196,33 @@ Portfolio.Aside = ({
         <p className="text-[16px] text-[#9DA2B9] font-medium pt-[17px]">
           {data.user.introduce}
         </p>
-
-        <div className="flex items-center gap-x-[13px] pt-[25px]">
+        <div className="flex items-center gap-x-1 text-[#ffffff] text-[13px]">
+          <FollowerIcon className="fill-[#ffffff]" />
+          <p>
+            <b>{data.user.followerCount}</b>{" "}
+            <span className="text-[12px]">팔로워</span>
+          </p>{" "}
+        </div>
+        <div className="flex items-center gap-x-1 text-[#ffffff] text-[13px]">
+          <span
+            data-tooltip-id="daysSince-tooltip"
+            data-tooltip-content="계정 생성일로부터 경과한 날짜"
+          >
+            <CalendarIcon className="cursor-help" />
+          </span>
+          <p>
+            <b>
+              {data.user.daysSinceAccountCreation}(
+              {Math.floor(data.user.daysSinceAccountCreation / 365)}Y)
+            </b>{" "}
+            <span className="text-[12px]">일 지남</span>
+          </p>{" "}
+          <ReactTooltip
+            id="daysSince-tooltip"
+            style={{ backgroundColor: "#5c5c5c", borderRadius: "20px" }}
+          />
+        </div>
+        <div className="flex items-center gap-x-[13px] pt-[25px] text-[13px]">
           <a
             data-tooltip-id="email-tooltip"
             data-tooltip-content={`${
@@ -394,6 +421,26 @@ Portfolio.Summary = ({ data }: { data: IUserData }) => {
         <SummaryBox.Content>
           <span className="text-[#39D353] text-[24px] font-bold">
             {data.user.repositoryCount}
+          </span>
+          <span className="text-[#ffffff] text-[24px] font-bold">개</span>
+        </SummaryBox.Content>
+      </SummaryBox>
+
+      <SummaryBox>
+        <SummaryBox.Title>받은 스타 개수</SummaryBox.Title>
+        <SummaryBox.Content>
+          <span className="text-[#39D353] text-[24px] font-bold">
+            {data.user.startCount}
+          </span>
+          <span className="text-[#ffffff] text-[24px] font-bold">개</span>
+        </SummaryBox.Content>
+      </SummaryBox>
+
+      <SummaryBox>
+        <SummaryBox.Title>포크 받은 개수</SummaryBox.Title>
+        <SummaryBox.Content>
+          <span className="text-[#39D353] text-[24px] font-bold">
+            {data.user.forkCount}
           </span>
           <span className="text-[#ffffff] text-[24px] font-bold">개</span>
         </SummaryBox.Content>

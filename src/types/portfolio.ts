@@ -34,6 +34,10 @@ export interface IUserData {
       socialAccounts: any[] | ISocialAccounts[];
     };
     repositoryCount: number;
+    startCount: number;
+    followerCount: number;
+    forkCount: number;
+    daysSinceAccountCreation: number;
   };
   repositories: any[] | IRepositories[];
   languages: any[] | ILanguages[];
