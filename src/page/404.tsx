@@ -1,4 +1,4 @@
-import { ReactComponent as Symbol } from "../assets/landing/symbol.svg";
+import { ReactComponent as Symbol } from "@assets/landing/symbol.svg";
 import { useNavigate } from "react-router-dom";
 
 export const NotFoundPage = () => {

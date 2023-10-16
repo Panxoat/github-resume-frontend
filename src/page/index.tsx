@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 
-import { ReactComponent as Symbol } from "../assets/landing/symbol.svg";
-import { ReactComponent as GithubLogo } from "../assets/landing/github-logo.svg";
-import { ReactComponent as ArrowIcon } from "../assets/landing/arrow.svg";
-import { ReactComponent as XIcon } from "../assets/landing/not_found_icon.svg";
-import { ReactComponent as HistoryIcon } from "../assets/landing/history_icon.svg";
+import { ReactComponent as Symbol } from "@assets/landing/symbol.svg";
+import { ReactComponent as GithubLogo } from "@assets/landing/github-logo.svg";
+import { ReactComponent as ArrowIcon } from "@assets/landing/arrow.svg";
+import { ReactComponent as XIcon } from "@assets/landing/not_found_icon.svg";
+import { ReactComponent as HistoryIcon } from "@assets/landing/history_icon.svg";
 
 import baseURL from "../api/axios";
 

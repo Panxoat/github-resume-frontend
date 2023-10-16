@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 
-import { ReactComponent as ErrorIcon } from "../../assets/landing/error_icon.svg";
+import { ReactComponent as ErrorIcon } from "@assets/landing/error_icon.svg";
 
 interface ISnackBar {
   type?: "ERROR" | "SUCCESS" | "INFO";

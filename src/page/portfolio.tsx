@@ -4,19 +4,19 @@ import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { ReactComponent as FollowerIcon } from "../assets/portfolio/aside/follower_icon.svg";
-import { ReactComponent as CalendarIcon } from "../assets/portfolio/aside/calendar_icon.svg";
-import { ReactComponent as EmailIcon } from "../assets/portfolio/aside/email_icon.svg";
-import { ReactComponent as CommitIcon } from "../assets/portfolio/aside/commit_icon.svg";
-import { ReactComponent as LanguageIcon } from "../assets/portfolio/aside/language_icon.svg";
-import { ReactComponent as ProjectIcon } from "../assets/portfolio/aside/project_icon.svg";
+import { ReactComponent as FollowerIcon } from "@assets/portfolio/aside/follower_icon.svg";
+import { ReactComponent as CalendarIcon } from "@assets/portfolio/aside/calendar_icon.svg";
+import { ReactComponent as EmailIcon } from "@assets/portfolio/aside/email_icon.svg";
+import { ReactComponent as CommitIcon } from "@assets/portfolio/aside/commit_icon.svg";
+import { ReactComponent as LanguageIcon } from "@assets/portfolio/aside/language_icon.svg";
+import { ReactComponent as ProjectIcon } from "@assets/portfolio/aside/project_icon.svg";
 
-import { ReactComponent as ProjectBanner } from "../assets/portfolio/project/project_banner.svg";
-import { ReactComponent as ForkIcon } from "../assets/portfolio/project/fork.svg";
-import { ReactComponent as StarIcon } from "../assets/portfolio/project/star.svg";
-import { ReactComponent as ArrowIcon } from "../assets/portfolio/project/arrow.svg";
-import { ReactComponent as LinkIcon } from "../assets/portfolio/project/link.svg";
-import { ReactComponent as NotFoundIcon } from "../assets/portfolio/project/not_found.svg";
+import { ReactComponent as ProjectBanner } from "@assets/portfolio/project/project_banner.svg";
+import { ReactComponent as ForkIcon } from "@assets/portfolio/project/fork.svg";
+import { ReactComponent as StarIcon } from "@assets/portfolio/project/star.svg";
+import { ReactComponent as ArrowIcon } from "@assets/portfolio/project/arrow.svg";
+import { ReactComponent as LinkIcon } from "@assets/portfolio/project/link.svg";
+import { ReactComponent as NotFoundIcon } from "@assets/portfolio/project/not_found.svg";
 
 import baseURL from "../api/axios";
 import { useLanguageColor } from "../hooks/useLanguageColor";
