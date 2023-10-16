@@ -119,7 +119,7 @@ export const Portfolio = () => {
               variants={screenVariants}
               initial="offscreen"
               whileInView="onscreen"
-              viewport={{ once: true, amount: 0.8 }}
+              viewport={{ once: true, amount: 0 }}
               ref={shareRef}
             >
               <Portfolio.Summary data={data} />
@@ -128,7 +128,7 @@ export const Portfolio = () => {
               variants={screenVariants}
               initial="offscreen"
               whileInView="onscreen"
-              viewport={{ once: true, amount: 0.45 }}
+              viewport={{ once: true, amount: 0 }}
               ref={shareRef}
             >
               <Portfolio.Share data={data} />
