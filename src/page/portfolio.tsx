@@ -98,7 +98,7 @@ export const Portfolio = () => {
       {!data && <PortfolioSkeleton />}
 
       {data && (
-        <article className="w-full h-screen flex gap-x-[20px] px-[10px] pt-[20px] tablet:gap-x-[20px] tablet:px-[30px] tablet:pt-[40px] desktop:gap-x-[40px] desktop:px-[40px] desktop:pt-[50px]">
+        <article className="w-full h-[calc(100vh-56px)] flex gap-x-[20px] px-[10px] tablet:gap-x-[20px] tablet:px-[30px] desktop:gap-x-[40px] desktop:px-[40px]">
           <aside className="w-[20%] hidden tablet:block">
             <Portfolio.Aside
               data={data}
