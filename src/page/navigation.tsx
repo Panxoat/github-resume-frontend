@@ -15,7 +15,7 @@ export const Navigation = () => {
       >
         <Logo className="w-[20px] h-[20px]" />
         <h1 className="text-[20px] text-[#ffffff] font-semibold">
-          Github Resume
+          GitHub Resume
         </h1>
       </button>
     </div>
