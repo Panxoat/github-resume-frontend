@@ -579,21 +579,21 @@ Portfolio.Share = ({ data }: { data: IUserData }) => {
                               ),
                               background: isCSSSuported(
                                 `linear-gradient(147.62deg, ${brightenColor(
-                                  third.color,
+                                  third.color || "#ffffff",
                                   10
                                 )} 10.96%, ${brightenColor(
-                                  third.color,
+                                  third.color || "#ffffff",
                                   -30
                                 )} 74.86%)`
                               )
                                 ? `linear-gradient(147.62deg, ${brightenColor(
-                                    third.color,
+                                    third.color || "#ffffff",
                                     10
                                   )} 10.96%, ${brightenColor(
-                                    third.color,
+                                    third.color || "#ffffff",
                                     -30
                                   )} 74.86%)`
-                                : third.color,
+                                : third.color || "#ffffff",
                             }}
                             className="w-full h-full flex flex-col px-[22px] py-[10px] dekstop:py-[22px] rounded-[12px]"
                           >

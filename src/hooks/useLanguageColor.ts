@@ -2448,7 +2448,10 @@ const data: {
 
 export const useLanguageColor = () => {
   const bgColor = (language: string) => {
-    return data[language];
+    return {
+      color: data[language]?.color || "#ffffff",
+      url: data[language]?.url || "",
+    };
   };
 
   return { bgColor };

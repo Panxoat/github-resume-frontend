@@ -4,7 +4,7 @@ const { DEV } = import.meta.env;
 
 const instance = axios.create({
   baseURL: DEV
-    ? "http://localhost:3000"
+    ? "http://localhost:3009"
     : "https://github-resume.api.consistent.kr/",
 });
 
